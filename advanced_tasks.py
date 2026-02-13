@@ -1,16 +1,17 @@
 def reverse_string(text_to_invert: str) -> str:
-    text  = list(text_to_invert)
+    text = list(text_to_invert)
     stack = []
     for _ in range(len(text)):
         stack.append(text.pop())
     return ''.join(stack)
 
-#print(reverse_string(input()))
 
-def matching_parentheses(algebraic_expression:str) -> list:
+# print(reverse_string(input()))
+
+def matching_parentheses(algebraic_expression: str) -> list:
     stack = []
     parentheses_indexes = []
-    for i in range (len(algebraic_expression)):
+    for i in range(len(algebraic_expression)):
         if algebraic_expression[i] == "(":
             parentheses_indexes.append(i)
         elif algebraic_expression[i] == ")":
@@ -20,6 +21,8 @@ def matching_parentheses(algebraic_expression:str) -> list:
                 phrase = algebraic_expression[start_index:close_index]
                 stack.append(phrase)
     return stack
+
+
 # res = matching_parentheses(input())
 # for item in res:
 #     print(item)
@@ -33,12 +36,13 @@ def supermarket():
         if person == "End":
             break
         elif person == "Paid":
-            while   supermarket_queue:
-                 print(supermarket_queue.popleft())
+            while supermarket_queue:
+                print(supermarket_queue.popleft())
             continue
         supermarket_queue.append(person)
 
     print(f"{len(supermarket_queue)} people remaining.")
+
 
 def supermarket_deque():
     from collections import deque
@@ -49,7 +53,7 @@ def supermarket_deque():
         if person == "End":
             break
         elif person == "Paid":
-            while   supermarket_queue:
+            while supermarket_queue:
                 supermarket_queue.popleft()
 
             continue
@@ -65,12 +69,13 @@ def supermarket_list_pop():
         if person == "End":
             break
         elif person == "Paid":
-            while   supermarket_queue:
-                 supermarket_queue.pop(0)
+            while supermarket_queue:
+                supermarket_queue.pop(0)
             continue
         supermarket_queue.append(person)
 
     print(f"{len(supermarket_queue)} people remaining.")
+
 
 def water_dispenser():
     from collections import deque
@@ -105,9 +110,10 @@ def water_dispenser():
 
         else:
             litres_for_adding = int(command[1])
-            litres+=litres_for_adding
+            litres += litres_for_adding
 
     print(f"{litres} liters left")
+
 
 def hot_potato():
     from collections import deque
@@ -115,11 +121,42 @@ def hot_potato():
     names = deque(input().split())
     number = int(input())
     while len(names) > 1:
-        names.rotate(-(number - 1) )
+        names.rotate(-(number - 1))
         print(f"Removed {names.popleft()}")
-
 
     print(f"Last is {names[0]}")
 
+
+def reverse_numbers():
+    line_of_numbers = input().split()
+    stack = []
+    while line_of_numbers:
+        stack.append(line_of_numbers.pop())
+    print(" ".join(stack))
+
+
+def stacked_queries():
+    n = int(input())
+    stack = []
+    for _ in range(n):
+        command = input()
+        if command == "2":
+            if stack:
+                stack.pop()
+        elif command == "3":
+            if stack:
+                print(max(stack))
+        elif command == "4":
+            if stack:
+                print(min(stack))
+        else:
+            # command = 1
+            number = int(command.split()[1])
+            stack.append(number)
+
+    print(", ".join(map(str, reversed(stack))))
+
+
+
 if __name__ == '__main__':
-    hot_potato()
+    pass

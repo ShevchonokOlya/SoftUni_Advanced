@@ -202,5 +202,102 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "Removed George\nRemoved Peter\nRemoved Michael\nRemoved William\nLast is Thomas"
         self.assertEqual(printed_text, expected_text)
 
+    @patch('builtins.input', side_effect=[
+        '1 2 3 4 5'])
+    def test_reverse_numbers12345_54321(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.reverse_numbers()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "5 4 3 2 1"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '1'])
+    def test_reverse_numbers1_1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.reverse_numbers()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "1"
+        self.assertEqual(printed_text, expected_text)
+
+
+    @patch('builtins.input', side_effect=[
+        ''])
+    def test_reverse_numbers_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.reverse_numbers()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = ""
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '9', '1 97', '2', '1 20' , '2', '1 26', '1 20', '3', '1 91', '4' ])
+    def test_stacked_queries_example(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.stacked_queries()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "26\n20\n91, 20, 26"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '10', '2', '1 47', '1 66' , '1 32', '4', '3', '1 25', '1 16','1 8', '4' ])
+    def test_stacked_queries_example2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.stacked_queries()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "32\n66\n8\n8, 16, 25, 32, 66, 47"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '1', '2'])
+    def test_stacked_queries_delete_from_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.stacked_queries()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = ""
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '1', '3'])
+    def test_stacked_queries_max_from_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.stacked_queries()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = ""
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '1', '4'])
+    def test_stacked_queries_min_from_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.stacked_queries()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = ""
+        self.assertEqual(printed_text, expected_text)
+
 if __name__ == '__main__':
     unittest.main()
