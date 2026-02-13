@@ -50,14 +50,15 @@ def supermarket_deque():
             break
         elif person == "Paid":
             while   supermarket_queue:
-                 supermarket_queue.popleft()
+                supermarket_queue.popleft()
+
             continue
         supermarket_queue.append(person)
 
     print(f"{len(supermarket_queue)} people remaining.")
-#supermarket()
 
-def supermarket_pop():
+
+def supermarket_list_pop():
     supermarket_queue = []
     while True:
         person = input()
@@ -71,7 +72,54 @@ def supermarket_pop():
 
     print(f"{len(supermarket_queue)} people remaining.")
 
+def water_dispenser():
+    from collections import deque
+    litres = int(input())
+    people_queue = deque()
+
+    while True:
+        person = input()
+
+        if person == "Start":
+            break
+        people_queue.append(person)
+
+    while True:
+        received_command = input()
+        if received_command == "End":
+            break
+        command = received_command.split()
+        if "refill" not in command:
+
+            litres_need = int(command[0])
+            if people_queue:
+                person_s_name = people_queue.popleft()
+                if litres >= litres_need:
+                    litres -= litres_need
+                    print(f"{person_s_name} got water")
+
+                else:
+                    print(f"{person_s_name} must wait")
+            else:
+                print(f"We have no people in the queue")
+
+        else:
+            litres_for_adding = int(command[1])
+            litres+=litres_for_adding
+
+    print(f"{litres} liters left")
+
+def hot_potato():
+    from collections import deque
+
+    names = deque(input().split())
+    number = int(input())
+    while len(names) > 1:
+        names.rotate(-(number - 1) )
+        print(f"Removed {names.popleft()}")
+
+
+    print(f"Last is {names[0]}")
 
 if __name__ == '__main__':
-     supermarket()
-     supermarket_pop()
+    hot_potato()

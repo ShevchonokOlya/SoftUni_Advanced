@@ -116,10 +116,10 @@ class AdvancedTasksTest(unittest.TestCase):
 
         printed_text = captured_output.getvalue().strip()
 
-        print("\nТЕСТ supermarket_deque НА 20000")
+        # print("\nТЕСТ supermarket_deque НА 20000")
         execution_time = end_time - start_time
 
-        print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
+        #print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
 
     @patch('builtins.input', side_effect=generate_huge_input())
     def test_supermarketPOP_1000queue_example(self, mock_input):
@@ -127,15 +127,80 @@ class AdvancedTasksTest(unittest.TestCase):
         start_time = time.perf_counter()
 
         with redirect_stdout(captured_output):
-            tasks.supermarket_pop()
+            tasks.supermarket_list_pop()
         end_time = time.perf_counter()
 
         printed_text = captured_output.getvalue().strip()
 
-        print("\nТЕСТ supermarket_pop НА 20000 ")
+        # print("\nТЕСТ supermarket_pop НА 20000 ")
         execution_time = end_time - start_time
 
-        print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
+       # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
+
+    @patch('builtins.input', side_effect=[
+        '2', 'Peter', 'Amy','Start', '2','refill 1','1', 'End'
+    ])
+    def test_water_dispenser_example(self, mock_input):
+        # Создаем новую чистую ловушку для второго теста
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.water_dispenser()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Peter got water\nAmy got water\n0 liters left"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '10', 'Peter', 'George', 'Amy', 'Alice','Start', '2','3','3','3','End'
+    ])
+    def test_water_dispenser_PeterGeorgeAmy_wait_Alice_2litres(self, mock_input):
+        # Создаем новую чистую ловушку для второго теста
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.water_dispenser()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Peter got water\nGeorge got water\nAmy got water\nAlice must wait\n2 liters left"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        'Tracy Emily Daniel','2'])
+    def test_hot_potato(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.hot_potato()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Removed Emily\nRemoved Tracy\nLast is Daniel"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        'George Peter Michael William Thomas','10'])
+    def test_hot_potato10(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.hot_potato()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Removed Thomas\nRemoved Peter\nRemoved Michael\nRemoved George\nLast is William"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        'George Peter Michael William Thomas', '1'])
+
+    def test_hot_potato1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.hot_potato()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Removed George\nRemoved Peter\nRemoved Michael\nRemoved William\nLast is Thomas"
+        self.assertEqual(printed_text, expected_text)
 
 if __name__ == '__main__':
     unittest.main()
