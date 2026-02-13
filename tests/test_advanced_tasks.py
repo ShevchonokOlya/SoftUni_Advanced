@@ -299,5 +299,52 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = ""
         self.assertEqual(printed_text, expected_text)
 
+    @patch('builtins.input', side_effect=[
+        '348', '20 54 30 16 7 9'])
+    def test_fast_food_with_Orders_complete(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.fast_food()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "54\nOrders complete"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '499', '57 45 62 70 33 90 88 76 100 50'])
+    def test_fast_food_with_orders_left(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.fast_food()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "100\nOrders left: 76 100 50"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '0', '57 45 62 70 33 90 88 76 100 50'])
+    def test_fast_food_with_zero_start(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.fast_food()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "100\nOrders left: 57 45 62 70 33 90 88 76 100 50"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '500', ''])
+    def test_fast_food_with_zero_purchises(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.fast_food()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Orders complete"
+        self.assertEqual(printed_text, expected_text)
 if __name__ == '__main__':
     unittest.main()

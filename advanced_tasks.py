@@ -157,6 +157,22 @@ def stacked_queries():
     print(", ".join(map(str, reversed(stack))))
 
 
+def fast_food():
+    from collections import deque
+    food_quantity = int(input())
+    food_purchases = deque(map(int, input().split()))
+
+    if food_purchases:
+        print(max(food_purchases))
+    while food_purchases and food_purchases[0] <= food_quantity:
+        food_quantity -= food_purchases.popleft()
+
+    if food_purchases:
+        print("Orders left:", *food_purchases)
+    else:
+        print("Orders complete")
+
+
 
 if __name__ == '__main__':
     pass
