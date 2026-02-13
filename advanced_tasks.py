@@ -173,6 +173,66 @@ def fast_food():
         print("Orders complete")
 
 
+def fashion_boutique():
+    delivered_close = list(map(int, input().split()))
+    capacity = int(input())
+    current_box_capacity = capacity
+    count_of_boxes = 1
+
+    while delivered_close:
+        current_close = delivered_close.pop()
+        if current_close <= current_box_capacity:
+            current_box_capacity -= current_close
+        else:
+            count_of_boxes += 1
+            current_box_capacity = capacity - current_close
+
+    print(f"{count_of_boxes}")
+
+
+def truck_tour():
+    from collections import deque
+    petrol_stations = int(input())
+    total_track = deque()
+    for petrol_number in range(petrol_stations):
+        amount_of_petrol, distance = input().split()
+        total_track.append({"petrol_number": petrol_number, "fuel": int(amount_of_petrol), "distance": int(distance)})
+
+    stops = 0
+    while stops < petrol_stations:
+
+        current_fuel = 0
+        for track in total_track:
+            if (current_fuel + track["fuel"]) >= track["distance"]:
+                current_fuel += track["fuel"]
+                current_fuel -= track["distance"]
+                stops += 1
+            else:
+                total_track.rotate(-1)
+                stops = 0
+                break
+
+    print(total_track[0]["petrol_number"])
+
+
+def balanced_parentheses():
+
+    phrase = input()
+    open_parentheses = []
+    parentheses_dic = {"{": "}", "[": "]", "(": ")"}
+    for char in phrase:
+        if char in parentheses_dic.keys():
+            open_parentheses.append(char)
+        else:
+                if len(open_parentheses) == 0 or char != parentheses_dic[open_parentheses.pop()] :
+                    print("NO")
+                    return
+
+
+    if not open_parentheses:
+        print("YES")
+    else:
+        print("NO")
 
 if __name__ == '__main__':
-    pass
+    balanced_parentheses()

@@ -5,6 +5,7 @@ import io
 from contextlib import redirect_stdout
 import time
 
+
 class AdvancedTasksTest(unittest.TestCase):
     def test_reverse_string_with_python_phrase(self):
         result = tasks.reverse_string("I Love Python")
@@ -19,18 +20,16 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(result, "")
 
     def test_matching_parentheses_with_long_expression(self):
-
         result = tasks.matching_parentheses("1 + (2 - (2 + 3) * 4 / (3 + 1)) * 5")
         self.assertEqual(result, ["(2 + 3)", "(3 + 1)", "(2 - (2 + 3) * 4 / (3 + 1))"])
 
     def test_matching_parentheses_with_Part_long_expression(self):
-
         result = tasks.matching_parentheses("(2 + 3) * 4 / (3 + 1)) * 5")
         self.assertEqual(result, ["(2 + 3)", "(3 + 1)"])
 
     def test_matching_parentheses_with_short_expression(self):
         result = tasks.matching_parentheses("(2 + 3) - (2 + 3)")
-        self.assertEqual(result, ["(2 + 3)" ,"(2 + 3)"] )
+        self.assertEqual(result, ["(2 + 3)", "(2 + 3)"])
 
     def test_matching_parentheses_empty(self):
         result = tasks.matching_parentheses("")
@@ -84,10 +83,9 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "3 people remaining."
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=[ 'End'
-    ])
+    @patch('builtins.input', side_effect=['End'
+                                          ])
     def test_supermarket_queue_Empty_example(self, mock_input):
-
         captured_output = io.StringIO()
 
         with redirect_stdout(captured_output):
@@ -98,12 +96,10 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     def generate_huge_input():
-
         my_inputs = [f"Client_{i}" for i in range(1, 20001)]
         my_inputs[19994] = "Paid"
         my_inputs.append("End")
         return my_inputs
-
 
     @patch('builtins.input', side_effect=generate_huge_input())
     def test_supermarket_1000queue_example(self, mock_input):
@@ -119,7 +115,7 @@ class AdvancedTasksTest(unittest.TestCase):
         # print("\nТЕСТ supermarket_deque НА 20000")
         execution_time = end_time - start_time
 
-        #print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
+        # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
 
     @patch('builtins.input', side_effect=generate_huge_input())
     def test_supermarketPOP_1000queue_example(self, mock_input):
@@ -135,10 +131,10 @@ class AdvancedTasksTest(unittest.TestCase):
         # print("\nТЕСТ supermarket_pop НА 20000 ")
         execution_time = end_time - start_time
 
-       # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
+    # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
 
     @patch('builtins.input', side_effect=[
-        '2', 'Peter', 'Amy','Start', '2','refill 1','1', 'End'
+        '2', 'Peter', 'Amy', 'Start', '2', 'refill 1', '1', 'End'
     ])
     def test_water_dispenser_example(self, mock_input):
         # Создаем новую чистую ловушку для второго теста
@@ -152,7 +148,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '10', 'Peter', 'George', 'Amy', 'Alice','Start', '2','3','3','3','End'
+        '10', 'Peter', 'George', 'Amy', 'Alice', 'Start', '2', '3', '3', '3', 'End'
     ])
     def test_water_dispenser_PeterGeorgeAmy_wait_Alice_2litres(self, mock_input):
         # Создаем новую чистую ловушку для второго теста
@@ -166,7 +162,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        'Tracy Emily Daniel','2'])
+        'Tracy Emily Daniel', '2'])
     def test_hot_potato(self, mock_input):
         captured_output = io.StringIO()
 
@@ -178,7 +174,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        'George Peter Michael William Thomas','10'])
+        'George Peter Michael William Thomas', '10'])
     def test_hot_potato10(self, mock_input):
         captured_output = io.StringIO()
 
@@ -191,7 +187,6 @@ class AdvancedTasksTest(unittest.TestCase):
 
     @patch('builtins.input', side_effect=[
         'George Peter Michael William Thomas', '1'])
-
     def test_hot_potato1(self, mock_input):
         captured_output = io.StringIO()
 
@@ -226,7 +221,6 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "1"
         self.assertEqual(printed_text, expected_text)
 
-
     @patch('builtins.input', side_effect=[
         ''])
     def test_reverse_numbers_empty(self, mock_input):
@@ -240,7 +234,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '9', '1 97', '2', '1 20' , '2', '1 26', '1 20', '3', '1 91', '4' ])
+        '9', '1 97', '2', '1 20', '2', '1 26', '1 20', '3', '1 91', '4'])
     def test_stacked_queries_example(self, mock_input):
         captured_output = io.StringIO()
 
@@ -252,7 +246,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '10', '2', '1 47', '1 66' , '1 32', '4', '3', '1 25', '1 16','1 8', '4' ])
+        '10', '2', '1 47', '1 66', '1 32', '4', '3', '1 25', '1 16', '1 8', '4'])
     def test_stacked_queries_example2(self, mock_input):
         captured_output = io.StringIO()
 
@@ -346,5 +340,116 @@ class AdvancedTasksTest(unittest.TestCase):
         printed_text = captured_output.getvalue().strip()
         expected_text = "Orders complete"
         self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '3', '1 5', '3 4', '10 3'])
+    def test_truck_tour_example_2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.truck_tour()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "2"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '3', '1 5', '10 3', '3 4'])
+    def test_truck_tour_example_1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.truck_tour()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "1"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '5', '22 5', '14 10', '52 7', '21 12', '36 9'])
+    def test_truck_tour_example_0(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.truck_tour()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "0"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '{{[[(())]]}}'])
+    def test_balanced_parentheses_YES(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "YES"
+        self.assertEqual(printed_text, expected_text)
+
+
+    @patch('builtins.input', side_effect=[
+        '{[()]}'])
+    def test_balanced_parentheses_YES2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "YES"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '{[(])}'])
+    def test_balanced_parentheses_NO(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "NO"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '{['])
+    def test_balanced_parentheses_2_open(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "NO"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        ')'])
+    def test_balanced_parentheses_1_close(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "NO"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '(){}[]'])
+    def test_balanced_parentheses_3_balanced(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.balanced_parentheses()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "YES"
+        self.assertEqual(printed_text, expected_text)
+
+
 if __name__ == '__main__':
     unittest.main()
