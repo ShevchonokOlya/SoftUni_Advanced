@@ -450,6 +450,111 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "YES"
         self.assertEqual(printed_text, expected_text)
 
+    @patch('builtins.input', side_effect=[
+        '50', '2', '11 10 5 11 10 20', '15 13 16', '1500'])
+    def test_key_revolver_test1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.key_revolver()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Ping!\nBang!\nReloading!\nBang!\nBang!\nReloading!\n2 bullets left. Earned $1300"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '20', '6', '14 13 12 11 10 5', '13 3 11 10', '800'])
+    def test_key_revolver_test2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.key_revolver()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Bang!\nPing!\nPing!\nPing!\nPing!\nPing!\nCouldn't get through. Locks left: 3"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '33', '1', '12 11 10', '10 20 30', '100'])
+    def test_key_revolver_test3(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.key_revolver()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Bang!\nReloading!\nBang!\nReloading!\nBang!\n0 bullets left. Earned $1"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '10','5', 'Mercedes' , 'green', 'Mercedes', 'BMW', 'Skoda' ,'green', 'END'])
+    def test_crossroads_test_1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.crossroads()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Everyone is safe.\n3 total cars passed the crossroads."
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '9','3', 'Mercedes', 'Hummer' , 'green', 'Hummer', 'Mercedes', 'green', 'END'])
+    def test_crossroads_test_2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.crossroads()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "A crash happened!\nHummer was hit at e."
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=[
+        '10','5', 'Volkswagen', 'BMW','green', 'END'])
+    def test_crossroads_test_3(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.crossroads()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Everyone is safe.\n1 total cars passed the crossroads."
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['4 2 10 5', '3 15 15 11 6'])
+    def test_cups_and_bottles_bottles_win(self, mock_input):
+
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.cups_and_bottles()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Bottles: 3\nWasted litters of water: 26"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['10 20 30', '5 5'])
+    def test_cups_and_bottles_cups_win(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.cups_and_bottles()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Cups: 20 30\nWasted litters of water: 0"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['5 6 4', '3 4 5 1 2'])
+    def test_cups_and_bottles_partial_fill(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.cups_and_bottles()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Cups: 4\nWasted litters of water: 4"
+        self.assertEqual(printed_text, expected_text)
 
 if __name__ == '__main__':
     unittest.main()

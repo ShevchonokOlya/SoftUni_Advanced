@@ -216,7 +216,6 @@ def truck_tour():
 
 
 def balanced_parentheses():
-
     phrase = input()
     open_parentheses = []
     parentheses_dic = {"{": "}", "[": "]", "(": ")"}
@@ -224,15 +223,164 @@ def balanced_parentheses():
         if char in parentheses_dic.keys():
             open_parentheses.append(char)
         else:
-                if len(open_parentheses) == 0 or char != parentheses_dic[open_parentheses.pop()] :
-                    print("NO")
-                    return
-
+            if len(open_parentheses) == 0 or char != parentheses_dic[open_parentheses.pop()]:
+                print("NO")
+                return
 
     if not open_parentheses:
         print("YES")
     else:
         print("NO")
 
+
+def convert(seconds: int) -> str:
+    seconds = seconds % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+
+    return "%02d:%02d:%02d" % (hour, minutes, seconds)
+
+
+def robotics():
+    from collections import deque
+    robots = [val.split("-") for val in input().split(";")]
+
+    robot_dict = {}
+    for robot in robots:
+        robot_dict[robot[0]] = [int(robot[1]), 0]
+
+    hours, minutes, seconds = map(int, input().split(":"))
+    time_in_seconds = (hours * 3600 + minutes * 60 + seconds)
+
+    products = deque()
+
+    while True:
+        product = input()
+        if product == "End":
+            break
+        else:
+            products.append(product)
+
+    while products:
+        time_in_seconds += 1
+
+        for robot_n, [working_time, freedom_timer] in robot_dict.items():
+            if freedom_timer <= time_in_seconds:
+                final_time = time_in_seconds + working_time
+                robot_dict[robot_n] = [working_time, final_time]
+                time_result = convert(time_in_seconds)
+                product_identification = products.popleft()
+                print(f"{robot_n} - {product_identification} [{time_result}]")
+                break
+        else:
+            products.rotate(-1)
+
+
+def key_revolver():
+    from collections import deque
+    bullets_price = int(input())  # 0-100
+    gun_barrel_size = int(input())  # 1-5000
+    bullets = list(map(int, input().split()))  # [1-100]
+
+    locks = deque(map(int, input().split()))  # [1-100]
+    intelligence_value = int(input())  # [1-100000]
+
+    current_burrel = 0
+    amount_of_shoot = 0
+
+    while locks and bullets:
+        lock_to_soot = locks[0]
+        bullet = bullets.pop()
+        current_burrel += 1
+
+        amount_of_shoot += 1
+        if lock_to_soot >= bullet:
+            print("Bang!")
+            locks.popleft()
+        else:
+            print("Ping!")
+
+        if current_burrel == gun_barrel_size and bullets:
+            print("Reloading!")
+            current_burrel = 0
+
+    if not locks:
+        money_earned = intelligence_value - bullets_price * amount_of_shoot
+        print(f"{len(bullets)} bullets left. Earned ${money_earned}")
+    else:
+        print(f"Couldn't get through. Locks left: {len(locks)}")
+
+
+def crossroads():
+    from collections import deque
+    duration_green_light = int(input())
+    free_window_seconds = int(input())
+    cars_in_traffic = deque()
+    success = 0
+
+    while True:
+        car_or_color = input()
+        if car_or_color == "END":
+            break
+        elif car_or_color == "green":
+            current_green = duration_green_light
+
+            while cars_in_traffic and current_green > 0:
+                new_car = cars_in_traffic.popleft()
+                current_car_lenght = len(new_car)
+
+                if current_car_lenght <= current_green:
+                    # car passed safely throw green light
+                    success += 1
+                    current_green -= current_car_lenght
+
+                elif current_green < current_car_lenght <= current_green + free_window_seconds:
+                    success += 1
+                    current_green = 0
+                    break
+
+                elif current_car_lenght > current_green + free_window_seconds:
+                    index = current_green + free_window_seconds
+                    print(f"A crash happened!\n{new_car} was hit at {new_car[index]}.")
+                    return
+
+        else:
+            car = car_or_color
+            cars_in_traffic.append(car)
+
+    print(f"Everyone is safe.\n{success} total cars passed the crossroads.")
+
+
+def cups_and_bottles():
+    from collections import deque
+    cups = deque(int(cup) for cup in input().split())  # litres - starts from first
+    bottles = [int(bottle) for bottle in input().split()]  # litres - starts from last
+    waisted_water = 0
+
+    while cups and bottles:
+
+        current_cup = cups[0]
+
+        while current_cup > 0 and bottles:
+            current_bottle = bottles.pop()
+
+            if current_bottle > current_cup:
+                waisted_water += current_bottle - current_cup
+
+            current_cup -= current_bottle
+            if current_cup <= 0:
+                cups.popleft()
+
+    if not cups:
+        print("Bottles:", " ".join(map(str, bottles)))
+
+    if cups and not bottles:
+        print("Cups:", " ".join(map(str, cups)))
+
+    print(f"Wasted litters of water: {waisted_water}")
+
+
 if __name__ == '__main__':
-    balanced_parentheses()
+    pass
