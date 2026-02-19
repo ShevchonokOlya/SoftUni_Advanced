@@ -382,5 +382,198 @@ def cups_and_bottles():
     print(f"Wasted litters of water: {waisted_water}")
 
 
+
+
+def count_same_values():
+    numbers = tuple(map(str, input().split()))
+    set_of_numbers = set(numbers)
+    for number in numbers:
+        if number in set_of_numbers:
+            print(f"{float(number):.1f} - {numbers.count(number)} times")
+            set_of_numbers.remove(number)
+
+
+def students_grades():
+    n = int(input())
+    student_grades = {}
+
+    for _ in range(n):
+        student = tuple(input().split())
+        student_grades[student[0]] = student_grades.get(student[0], []) + [float(student[1])]
+
+    for student_name, marks in student_grades.items():
+        average_grade = sum(marks) / len(marks)
+        marks = [mark for mark in marks]
+        print(f"{student_name} -> {' '.join([f'{el:.2f}' for el in marks])} (avg: {average_grade:.2f})")
+
+
+def record_unique_names():
+    number_of_unique_names = int(input())
+    names: set = set()
+    for _ in range(number_of_unique_names):
+        names.add(input())
+    [print(name) for name in names]
+
+
+def parking_lot():
+    car_number = int(input())
+    car_registration_numbers = set()
+
+    for _ in range(car_number):
+        car = tuple(input().split(","))
+        if car[0] == "IN":
+            car_registration_numbers.add(car[1])
+        else:
+            if car[1] in car_registration_numbers:
+                car_registration_numbers.remove(car[1])
+
+    if len(car_registration_numbers) == 0:
+        print("Parking Lot is Empty")
+    else:
+        print("\n".join(car_registration_numbers))
+
+
+def soft_uni_party():
+    number_of_guests = int(input())
+    reservation_numbers = set()
+    for _ in range(number_of_guests):
+        reservation = input()
+        if len(reservation) == 8:
+            reservation_numbers.add(reservation)
+
+    while True:
+        entered_guest = input()
+        if entered_guest == "END":
+            break
+        if entered_guest in reservation_numbers:
+            reservation_numbers.remove(entered_guest)
+
+    print(len(reservation_numbers))
+    sorted_guests = sorted([guest for guest in reservation_numbers])
+    print("\n".join(sorted_guests))
+
+
+def summation_pairs():
+    import time
+    unique_integers = set([int(number) for number in input().split()])
+    target_number = int(input())
+
+    start = time.perf_counter()
+
+    result = set()
+
+    while unique_integers:
+        number = unique_integers.pop()
+        pair_number = target_number - int(number)
+
+        if pair_number in unique_integers:
+            unique_integers.remove(pair_number)
+            result.add((number, pair_number))
+
+    for pair_of_numbers in result:
+        print(f"{pair_of_numbers[0]} + {pair_of_numbers[1]} = {target_number}")
+
+
+# print(time.perf_counter() - start)
+
+
+def sum_pairs():
+    import time
+    numbers = list(map(int, input().split()))
+    target = int(input())
+
+    start = time.perf_counter()
+    targets = set()
+    values_map = {}
+    for value in numbers:
+
+        if value in targets:
+            targets.remove(value)
+            pair = values_map[value]
+            del values_map[value]
+            print(f'{pair} + {value} = {target}')
+
+        else:
+            resulting_number = target - value
+            targets.add(resulting_number)
+            values_map[resulting_number] = value
+
+    # print(time.perf_counter() - start)
+
+
+def unique_usernames():
+    names = set()
+    for _ in range(int(input())):
+        names.add(input())
+    print(*names, sep="\n")
+
+
+def sets_of_elements():
+    set1_length, set2_length = (int(num) for num in input().split())
+
+    set1 = set()
+    set2 = set()
+    for _ in range(set1_length):
+        set1.add(input())
+    for _ in range(set2_length):
+        set2.add(input())
+    print(*(set1 & set2), sep="\n")
+
+
+def periodic_table():
+    elements = set()
+    for _ in range(int(input())):
+        elements = elements.union(input().split())
+    print(*elements, sep="\n")
+
+
+def count_symbols():
+    txt = input()
+    symbols = set(txt)
+    for ch in sorted(symbols):
+        print(f"{ch}: {txt.count(ch)} time/s")
+
+
+def get_elements(interval_string: str) -> list:
+    section1, section2 = interval_string.split("-")
+    start_1, end_1 = map(int, section1.split(","))
+    start_2, end_2 = map(int, section2.split(","))
+
+    section1 = set(int(num) for num in range(start_1, end_1 + 1))
+    section2 = set(int(num) for num in range(start_2, end_2 + 1))
+    return list(section1 & section2)
+
+
+def longest_intersection():
+    result_interval = []
+    max_list_len = -1
+    for _ in range(int(input())):
+        intersection = get_elements(input())
+        if len(intersection) > max_list_len:
+            max_list_len = len(intersection)
+            result_interval = intersection.copy()
+    print(f"Longest intersection is {result_interval} with length {max_list_len}")
+
+
+def battle_of_names():
+    even = set()
+    odd = set()
+    for counter in range(0, int(input())):
+        counter += 1
+        name_price = sum([ord(ch) for ch in input()])
+        name_price //= counter
+        even.add(name_price) if name_price % 2 == 0 else odd.add(name_price)
+
+
+    odd_sum = sum(odd)
+    even_sum = sum(even)
+
+    if odd_sum == even_sum:
+        print(*(odd.union(even)), sep=", ")
+    elif odd_sum > even_sum:
+        print(*(odd.difference(even)), sep=", ")
+    else:
+        print(*(even.symmetric_difference(odd)), sep=", ")
+
 if __name__ == '__main__':
     pass
