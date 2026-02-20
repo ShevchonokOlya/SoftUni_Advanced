@@ -95,43 +95,6 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "0 people remaining."
         self.assertEqual(printed_text, expected_text)
 
-    def generate_huge_input():
-        my_inputs = [f"Client_{i}" for i in range(1, 20001)]
-        my_inputs[19994] = "Paid"
-        my_inputs.append("End")
-        return my_inputs
-
-    @patch('builtins.input', side_effect=generate_huge_input())
-    def test_supermarket_1000queue_example(self, mock_input):
-        captured_output = io.StringIO()
-        start_time = time.perf_counter()
-
-        with redirect_stdout(captured_output):
-            tasks.supermarket_deque()  # Вызываем твою функцию
-        end_time = time.perf_counter()
-
-        printed_text = captured_output.getvalue().strip()
-
-        # print("\nТЕСТ supermarket_deque НА 20000")
-        execution_time = end_time - start_time
-
-        # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
-
-    @patch('builtins.input', side_effect=generate_huge_input())
-    def test_supermarketPOP_1000queue_example(self, mock_input):
-        captured_output = io.StringIO()
-        start_time = time.perf_counter()
-
-        with redirect_stdout(captured_output):
-            tasks.supermarket_list_pop()
-        end_time = time.perf_counter()
-
-        printed_text = captured_output.getvalue().strip()
-
-        # print("\nТЕСТ supermarket_pop НА 20000 ")
-        execution_time = end_time - start_time
-
-    # print(f"\n⏱ Время выполнения: {execution_time:.5f} секунд")
 
     @patch('builtins.input', side_effect=[
         '2', 'Peter', 'Amy', 'Start', '2', 'refill 1', '1', 'End'
@@ -389,7 +352,6 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "YES"
         self.assertEqual(printed_text, expected_text)
 
-
     @patch('builtins.input', side_effect=[
         '{[()]}'])
     def test_balanced_parentheses_YES2(self, mock_input):
@@ -487,7 +449,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '10','5', 'Mercedes' , 'green', 'Mercedes', 'BMW', 'Skoda' ,'green', 'END'])
+        '10', '5', 'Mercedes', 'green', 'Mercedes', 'BMW', 'Skoda', 'green', 'END'])
     def test_crossroads_test_1(self, mock_input):
         captured_output = io.StringIO()
 
@@ -499,7 +461,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '9','3', 'Mercedes', 'Hummer' , 'green', 'Hummer', 'Mercedes', 'green', 'END'])
+        '9', '3', 'Mercedes', 'Hummer', 'green', 'Hummer', 'Mercedes', 'green', 'END'])
     def test_crossroads_test_2(self, mock_input):
         captured_output = io.StringIO()
 
@@ -511,7 +473,7 @@ class AdvancedTasksTest(unittest.TestCase):
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=[
-        '10','5', 'Volkswagen', 'BMW','green', 'END'])
+        '10', '5', 'Volkswagen', 'BMW', 'green', 'END'])
     def test_crossroads_test_3(self, mock_input):
         captured_output = io.StringIO()
 
@@ -524,7 +486,6 @@ class AdvancedTasksTest(unittest.TestCase):
 
     @patch('builtins.input', side_effect=['4 2 10 5', '3 15 15 11 6'])
     def test_cups_and_bottles_bottles_win(self, mock_input):
-
         captured_output = io.StringIO()
 
         with redirect_stdout(captured_output):
@@ -578,7 +539,9 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "2.0 - 3 times\n4.0 - 6 times\n5.0 - 4 times\n3.0 - 7 times"
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['7', 'Peter 5.20','Mark 5.50', 'Peter 3.20', 'Mark 2.50', 'Alex 2.00', 'Mark 3.46', 'Alex 3.00'])
+    @patch('builtins.input',
+           side_effect=['7', 'Peter 5.20', 'Mark 5.50', 'Peter 3.20', 'Mark 2.50', 'Alex 2.00', 'Mark 3.46',
+                        'Alex 3.00'])
     def test_students_grades_3_people_7_lines(self, mock_input):
         captured_output = io.StringIO()
 
@@ -589,7 +552,7 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "Peter -> 5.20 3.20 (avg: 4.20)\nMark -> 5.50 2.50 3.46 (avg: 3.82)\nAlex -> 2.00 3.00 (avg: 2.50)"
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['4', 'Scott 4.50','Ted 3.00', 'Scott 5.00', 'Ted 3.66'])
+    @patch('builtins.input', side_effect=['4', 'Scott 4.50', 'Ted 3.00', 'Scott 5.00', 'Ted 3.66'])
     def test_students_grades_2people(self, mock_input):
         captured_output = io.StringIO()
 
@@ -600,7 +563,7 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "Scott -> 4.50 5.00 (avg: 4.75)\nTed -> 3.00 3.66 (avg: 3.33)"
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['5', 'Lee 6.00','Lee 5.50', 'Lee 6.00', 'Peter 4.40', 'Kenny 3.30'])
+    @patch('builtins.input', side_effect=['5', 'Lee 6.00', 'Lee 5.50', 'Lee 6.00', 'Peter 4.40', 'Kenny 3.30'])
     def test_students_grades_3_people_5_lines(self, mock_input):
         captured_output = io.StringIO()
 
@@ -630,7 +593,6 @@ class AdvancedTasksTest(unittest.TestCase):
 
         missing_cars = expected_output - actual_output
         self.assertFalse(missing_cars, f"Ошибка! Потеряны машины: {missing_cars}")
-
 
         extra_cars = actual_output - expected_output
         self.assertFalse(extra_cars, f"Ошибка! Лишние машины на парковке: {extra_cars}")
@@ -680,10 +642,12 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.unique_usernames()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {"Peter","NiceGuy1234","George"}
+        expected_text = {"Peter", "NiceGuy1234", "George"}
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['10', 'Peter', 'Maria', 'Peter', 'George', 'Steve', 'Maria', 'Alex', 'Peter', 'Steve','George'])
+    @patch('builtins.input',
+           side_effect=['10', 'Peter', 'Maria', 'Peter', 'George', 'Steve', 'Maria', 'Alex', 'Peter', 'Steve',
+                        'George'])
     def test_unique_usernames_5(self, mock_input):
         captured_output = io.StringIO()
 
@@ -691,7 +655,7 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.unique_usernames()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {'Peter', 'Maria', 'George', 'Steve', 'Alex' }
+        expected_text = {'Peter', 'Maria', 'George', 'Steve', 'Alex'}
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=['4 3', '1', '3', '5', '7', '3', '4', '5'])
@@ -702,11 +666,10 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.sets_of_elements()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {'3', '5' }
+        expected_text = {'3', '5'}
         self.assertEqual(printed_text, expected_text)
 
-
-    @patch('builtins.input', side_effect=['2 2', '1', '3', '1', '5' ])
+    @patch('builtins.input', side_effect=['2 2', '1', '3', '1', '5'])
     def test_sets_of_elements_1(self, mock_input):
         captured_output = io.StringIO()
 
@@ -714,10 +677,10 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.sets_of_elements()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {'1' }
+        expected_text = {'1'}
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['4', 'Ce O', 'Mo O Ce' , 'Ee', 'Mo' ])
+    @patch('builtins.input', side_effect=['4', 'Ce O', 'Mo O Ce', 'Ee', 'Mo'])
     def test_periodic_table4_4(self, mock_input):
         captured_output = io.StringIO()
 
@@ -725,7 +688,7 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.periodic_table()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {'Ce', 'Ee' , 'Mo', 'O' }
+        expected_text = {'Ce', 'Ee', 'Mo', 'O'}
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=['3', 'Ge Ch O Ne', 'Nb Mo Tc', 'O Ne'])
@@ -736,7 +699,7 @@ class AdvancedTasksTest(unittest.TestCase):
             tasks.periodic_table()
 
         printed_text = set((captured_output.getvalue().strip()).split('\n'))
-        expected_text = {'Ch','Ge','Mo','Nb','Ne','O','Tc'}
+        expected_text = {'Ch', 'Ge', 'Mo', 'Nb', 'Ne', 'O', 'Tc'}
         self.assertEqual(printed_text, expected_text)
 
     @patch('builtins.input', side_effect=['SoftUni rocks'])
@@ -745,10 +708,11 @@ class AdvancedTasksTest(unittest.TestCase):
         with redirect_stdout(captured_output):
             tasks.count_symbols()
         printed_text = set(line for line in captured_output.getvalue().split('\n') if line)
-        expected_text = {' : 1 time/s','S: 1 time/s','U: 1 time/s','c: 1 time/s','f: 1 time/s','i: 1 time/s','k: 1 time/s','n: 1 time/s','o: 2 time/s','r: 1 time/s','s: 1 time/s','t: 1 time/s'}
+        expected_text = {' : 1 time/s', 'S: 1 time/s', 'U: 1 time/s', 'c: 1 time/s', 'f: 1 time/s', 'i: 1 time/s',
+                         'k: 1 time/s', 'n: 1 time/s', 'o: 2 time/s', 'r: 1 time/s', 's: 1 time/s', 't: 1 time/s'}
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['3', '0,3-1,2' , '2,10-3,5', '6,15-3,10'])
+    @patch('builtins.input', side_effect=['3', '0,3-1,2', '2,10-3,5', '6,15-3,10'])
     def test_longest_intersection_length_5(self, mock_input):
         captured_output = io.StringIO()
 
@@ -770,7 +734,7 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = 'Longest intersection is [2, 3, 4, 5, 6, 7, 8, 9, 10] with length 9'
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['4','Pesho','Stefan','Stamat', 'Gosho'])
+    @patch('builtins.input', side_effect=['4', 'Pesho', 'Stefan', 'Stamat', 'Gosho'])
     def test_battle_of_names_4_results(self, mock_input):
         captured_output = io.StringIO()
 
@@ -781,7 +745,7 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = '304, 128, 206, 511'
         self.assertEqual(printed_text, expected_text)
 
-    @patch('builtins.input', side_effect=['6','Preslav', 'Gosho','Ivan','Stamat','Pesho','Stefan'])
+    @patch('builtins.input', side_effect=['6', 'Preslav', 'Gosho', 'Ivan', 'Stamat', 'Pesho', 'Stefan'])
     def test_battle_of_names_2_results(self, mock_input):
         captured_output = io.StringIO()
 
@@ -816,7 +780,6 @@ class AdvancedTasksTest(unittest.TestCase):
 
     @patch('builtins.input', side_effect=['1 2 3', '10 20 30 40 50'])
     def test_cups_and_bottles_multiple_bottles_left(self, mock_input):
-
         captured_output = io.StringIO()
 
         with redirect_stdout(captured_output):
@@ -826,6 +789,218 @@ class AdvancedTasksTest(unittest.TestCase):
         expected_text = "Bottles: 10 20\nWasted litters of water: 114"
         self.assertEqual(printed_text, expected_text)
 
+    @patch('builtins.input',
+           side_effect=['1 2 3 4 5', '1 2 3', '3', 'Add First 5 6', 'Remove Second 8 9 11', 'Check Subset'])
+    def test_numbers_sequence_true(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.numbers_sequence()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "True\n1, 2, 3, 4, 5, 6\n1, 2, 3"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input',
+           side_effect=['5 4 2 9 9 5 4', '1 1 1 5 6 5', "4", 'Add First 5 6 9 3', 'Add Second 1 2 3 3 3',
+                        'Check Subset', 'Remove Second 1 2 3 4 5'])
+    def test_numbers_sequence_false(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.numbers_sequence()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "False\n2, 3, 4, 5, 6, 9\n6"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['6 3 - 2 1 * 5 /'])
+    def test_expression_evaluator(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.expression_evaluator()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "1"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['2 2 - 1 *'])
+    def test_expression_evaluator_zero(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.expression_evaluator()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "0"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['10 23 * 4 2 / 30 10 + 100 50 - 2 -1 *'])
+    def test_expression_evaluator_big_number(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.expression_evaluator()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "164"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['20, 24, -5, 17, 22, 60, 26', '26, 60, 22, 17, 24, 10, 55'])
+    def test_milkshakes_full_response(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.milkshakes()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Great! You made all the chocolate milkshakes needed!\nChocolate: 20\nMilk: 10, 55"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['-10, -2, -30, 10','-5'])
+    def test_milkshakes_milk_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.milkshakes()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Not enough milkshakes.\nChocolate: -10, -2, -30, 10\nMilk: empty"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['2, 3, 3, 7, 2', '2, 7, 3, 3, 2, 14, 6'])
+    def test_milkshakes_Chocolate_empty(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.milkshakes()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Great! You made all the chocolate milkshakes needed!\nChocolate: empty\nMilk: 14, 6"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['-10', '-5'])
+    def test_milkshakes_Chocolate_negative_enter(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.milkshakes()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Not enough milkshakes.\nChocolate: empty\nMilk: empty"
+        self.assertEqual(printed_text, expected_text)
+
+
+
+    @patch('builtins.input', side_effect=['30','15 9 5 150 8','* + + * -'])
+    def test_honey(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.honey()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Total honey made: 4500\nNectar left: 15, 9, 5"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['20 62 99 35 0 150','120 60 10 1 70 10','+ - + + / * - - /'])
+    def test_honey2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.honey()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = "Total honey made: 148\nBees left: 99, 35, 0, 150"
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['10 -5 20 15 -30 10', '40 60 10 4 10 0'])
+    def test_santa_present_factory_example_1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.santa_present_factory()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "The presents are crafted! Merry Christmas!\n"
+            "Materials left: 20, -5, 10\n"
+            "Bicycle: 1\n"
+            "Teddy bear: 2"
+        )
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['30 5 15 60 0 30', '-15 10 5 -15 25'])
+    def test_santa_present_factory_example_2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.santa_present_factory()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "No presents this Christmas!\n"
+            "Materials left: 20, 30\n"
+            "Doll: 1\n"
+            "Teddy bear: 1"
+        )
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['30 10', '15 10 5 0 10'])
+    def test_santa_present_factory_example_3(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.santa_present_factory()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "No presents this Christmas!\n"
+            "Magic left: 5, 0, 10\n"
+            "Doll: 1\n"
+            "Teddy bear: 1"
+        )
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['d yel blu e low redd'])
+    def test_paint_colors_example_1(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.paint_colors()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "['yellow', 'blue', 'red']"
+        )
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['r ue nge ora bl ed'])
+    def test_paint_colors_example_2(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.paint_colors()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "['red', 'blue']"
+        )
+        self.assertEqual(printed_text, expected_text)
+
+    @patch('builtins.input', side_effect=['re ple blu pop e pur d'])
+    def test_paint_colors_example_3(self, mock_input):
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            tasks.paint_colors()
+
+        printed_text = captured_output.getvalue().strip()
+        expected_text = (
+            "['red', 'purple', 'blue']"
+        )
+        self.assertEqual(printed_text, expected_text)
 
 if __name__ == '__main__':
     unittest.main()

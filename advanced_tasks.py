@@ -329,19 +329,18 @@ def crossroads():
 
             while cars_in_traffic and current_green > 0:
                 new_car = cars_in_traffic.popleft()
-                current_car_lenght = len(new_car)
+                current_car_length = len(new_car)
 
-                if current_car_lenght <= current_green:
+                if current_car_length <= current_green:
                     # car passed safely throw green light
                     success += 1
-                    current_green -= current_car_lenght
+                    current_green -= current_car_length
 
-                elif current_green < current_car_lenght <= current_green + free_window_seconds:
+                elif current_green < current_car_length <= current_green + free_window_seconds:
                     success += 1
-                    current_green = 0
                     break
 
-                elif current_car_lenght > current_green + free_window_seconds:
+                elif current_car_length > current_green + free_window_seconds:
                     index = current_green + free_window_seconds
                     print(f"A crash happened!\n{new_car} was hit at {new_car[index]}.")
                     return
@@ -380,8 +379,6 @@ def cups_and_bottles():
         print("Cups:", " ".join(map(str, cups)))
 
     print(f"Wasted litters of water: {waisted_water}")
-
-
 
 
 def count_same_values():
@@ -454,11 +451,11 @@ def soft_uni_party():
 
 
 def summation_pairs():
-    import time
+    # import time
     unique_integers = set([int(number) for number in input().split()])
     target_number = int(input())
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
     result = set()
 
@@ -478,11 +475,11 @@ def summation_pairs():
 
 
 def sum_pairs():
-    import time
+    # import time
     numbers = list(map(int, input().split()))
     target = int(input())
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
     targets = set()
     values_map = {}
     for value in numbers:
@@ -564,7 +561,6 @@ def battle_of_names():
         name_price //= counter
         even.add(name_price) if name_price % 2 == 0 else odd.add(name_price)
 
-
     odd_sum = sum(odd)
     even_sum = sum(even)
 
@@ -574,6 +570,242 @@ def battle_of_names():
         print(*(odd.difference(even)), sep=", ")
     else:
         print(*(even.symmetric_difference(odd)), sep=", ")
+
+
+def numbers_sequence():
+    sequence_of_numbers_1 = set(map(int, input().split()))
+    sequence_of_numbers_2 = set(map(int, input().split()))
+    for _ in range(int(input())):
+        command = input().split()
+
+        if command[0] == "Add":
+            numbers_to_add = set(map(int, command[2:]))
+
+            if command[1] == "First":
+                sequence_of_numbers_1 = sequence_of_numbers_1.union(numbers_to_add)
+            else:
+                sequence_of_numbers_2 = sequence_of_numbers_2.union(numbers_to_add)
+
+        elif command[0] == "Remove":
+            numbers_to_remove = set(map(int, command[2:]))
+            if command[1] == "First":
+                sequence_of_numbers_1 -= numbers_to_remove
+            else:
+                sequence_of_numbers_2 -= numbers_to_remove
+
+        elif command[0] == "Check":
+            if sequence_of_numbers_2 <= sequence_of_numbers_1 or sequence_of_numbers_1 <= sequence_of_numbers_2:
+
+                print("True")
+            else:
+                print("False")
+    print(*sorted(sequence_of_numbers_1), sep=", ")
+    print(*sorted(sequence_of_numbers_2), sep=", ")
+
+
+def expression_evaluator():
+    from collections import deque
+    numbers = deque()
+    input_expression = input().split()
+    current_num = 0
+    for expr in input_expression:
+        if expr.lstrip('-').isdigit():
+            numbers.append(int(expr))
+        else:
+
+            if expr == "+":
+                current_num = numbers.popleft()
+
+                while numbers:
+                    current_num += numbers.popleft()
+
+            elif expr == "-":
+                current_num = numbers.popleft()
+                while numbers:
+                    current_num -= numbers.popleft()
+
+            elif expr == "*":
+                current_num = numbers.popleft()
+                while numbers:
+                    current_num *= numbers.popleft()
+
+            elif expr == "/":
+                current_num = numbers.popleft()
+                while numbers:
+                    current_num = current_num // numbers.popleft()
+
+            numbers.appendleft(current_num)
+    print(current_num)
+
+
+def milkshakes():
+    from collections import deque
+    chocolate = list(map(int, input().split(", ")))
+    milk_cups = deque(map(int, input().split(', ')))
+    milkshake_count = 0
+
+    while milk_cups and chocolate:
+
+        current_chocolate = chocolate[-1]
+        current_milk = milk_cups[0]
+
+        if current_chocolate <= 0 or current_milk <= 0:
+            if current_chocolate <= 0:
+                chocolate.pop()
+            if current_milk <= 0:
+                milk_cups.popleft()
+            continue
+
+        if current_chocolate == current_milk:
+            chocolate.pop()
+            milk_cups.popleft()
+            milkshake_count += 1
+        else:
+            milk_cups.rotate(-1)
+            chocolate[-1] -= 5
+
+        if milkshake_count >= 5:
+            break
+    if milkshake_count < 5:
+        print("Not enough milkshakes.")
+    else:
+        print("Great! You made all the chocolate milkshakes needed!")
+
+    if chocolate:
+        print("Chocolate:", ", ".join(map(str, chocolate)))
+    else:
+        print("Chocolate: empty")
+    if milk_cups:
+        print("Milk:", ", ".join(map(str, milk_cups)))
+    else:
+        print("Milk: empty")
+
+
+def honey():
+    from collections import deque
+
+    bees = deque(map(int, input().split()))
+    nectar = list(map(int, input().split()))
+    symbols = deque(input().split())
+    total_honey = 0
+
+    while bees and nectar:
+        current_bee = bees[0]
+        current_nectar = nectar[-1]
+
+        if current_bee <= current_nectar:
+
+            symbol = symbols.popleft()
+
+
+            if symbol == "+":
+                total_honey += current_bee + current_nectar
+            elif symbol == "-":
+                total_honey += abs(current_bee - current_nectar)
+            elif symbol == "*":
+                total_honey += current_bee * current_nectar
+            elif symbol == "/":
+                if current_nectar != 0:
+                    total_honey += current_bee / current_nectar
+
+            bees.popleft()
+            nectar.pop()
+        else:
+            nectar.pop()
+            continue
+
+
+    print(f"Total honey made: {total_honey}")
+    if bees:
+        print(f"Bees left: {', '.join(map(str, bees))}")
+    if nectar:
+        print(f"Nectar left: {', '.join(map(str, nectar))}")
+
+
+
+def santa_present_factory():
+    from collections import deque
+    boxes_with_materials = list(map(int, input().split()))
+    magic_values = deque(map(int, input().split()))
+    presents = {}
+
+    toys = {"Doll":150, "Wooden train":250, "Teddy bear":300, "Bicycle":400}
+
+    while boxes_with_materials and magic_values:
+        material = boxes_with_materials[-1]
+        magic = magic_values[0]
+        total_magic = material * magic
+        if total_magic < 0:
+            current_magic = boxes_with_materials.pop() + magic_values.popleft()
+            boxes_with_materials.append(current_magic)
+            continue
+        elif total_magic == 0:
+            if material == 0:
+                boxes_with_materials.pop()
+            if magic == 0:
+                magic_values.popleft()
+        else:
+            if total_magic in toys.values():
+                toy = [key for key, val in toys.items() if val == total_magic][0]
+                presents[toy] = presents.get(toy, 0) + 1
+                boxes_with_materials.pop()
+                magic_values.popleft()
+            else:
+                magic_values.popleft()
+                boxes_with_materials[-1] += 15
+
+    if ("Doll" in presents.keys() and "Wooden train" in presents.keys()) or (
+            "Teddy bear" in presents.keys() and "Bicycle" in presents.keys()):
+
+        print("The presents are crafted! Merry Christmas!")
+    else:
+        print("No presents this Christmas!")
+
+    if boxes_with_materials:
+        print(f"Materials left: {', '.join(map(str, (boxes_with_materials [::-1])))}")
+    if magic_values:
+        print(f"Magic left: {', '.join(map(str, magic_values))}")
+    for present, amount in sorted(presents.items()):
+        print(f"{present}: {amount}")
+
+
+def paint_colors():
+    colors = input().split()
+    main_colors = {"red", "yellow", "blue"}
+    secondary_colors = {
+        "orange": ["red", "yellow"],
+        "purple": ["red", "blue"],
+        "green": ["yellow", "blue"]}
+
+    found_colors = []
+
+    while colors:
+        first_color = colors.pop(0)
+        second_color = colors.pop(-1) if colors else ""
+
+        one = str(first_color + second_color)
+        second  = str(second_color + first_color)
+
+        if one in main_colors or  one in secondary_colors.keys():
+            found_colors.append(one)
+        elif str(second) in main_colors or second in secondary_colors.keys():
+            found_colors.append(second)
+        else:
+            first_color = first_color[:-1]
+            second_color = second_color[:-1]
+            if first_color:
+                colors.insert(len(colors) // 2, first_color)
+            if second_color:
+                colors.insert(len(colors) // 2, second_color)
+
+    for color in found_colors:
+        if color in secondary_colors.keys():
+            needed_colors = set(secondary_colors[color])
+            all_colors = set(found_colors)
+            if not needed_colors.issubset(all_colors):
+                found_colors.remove(color)
+
+    print(found_colors)
 
 if __name__ == '__main__':
     pass
