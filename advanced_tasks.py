@@ -697,7 +697,6 @@ def honey():
 
             symbol = symbols.popleft()
 
-
             if symbol == "+":
                 total_honey += current_bee + current_nectar
             elif symbol == "-":
@@ -714,13 +713,11 @@ def honey():
             nectar.pop()
             continue
 
-
     print(f"Total honey made: {total_honey}")
     if bees:
         print(f"Bees left: {', '.join(map(str, bees))}")
     if nectar:
         print(f"Nectar left: {', '.join(map(str, nectar))}")
-
 
 
 def santa_present_factory():
@@ -729,7 +726,7 @@ def santa_present_factory():
     magic_values = deque(map(int, input().split()))
     presents = {}
 
-    toys = {"Doll":150, "Wooden train":250, "Teddy bear":300, "Bicycle":400}
+    toys = {"Doll": 150, "Wooden train": 250, "Teddy bear": 300, "Bicycle": 400}
 
     while boxes_with_materials and magic_values:
         material = boxes_with_materials[-1]
@@ -762,7 +759,7 @@ def santa_present_factory():
         print("No presents this Christmas!")
 
     if boxes_with_materials:
-        print(f"Materials left: {', '.join(map(str, (boxes_with_materials [::-1])))}")
+        print(f"Materials left: {', '.join(map(str, (boxes_with_materials[::-1])))}")
     if magic_values:
         print(f"Magic left: {', '.join(map(str, magic_values))}")
     for present, amount in sorted(presents.items()):
@@ -784,9 +781,9 @@ def paint_colors():
         second_color = colors.pop(-1) if colors else ""
 
         one = str(first_color + second_color)
-        second  = str(second_color + first_color)
+        second = str(second_color + first_color)
 
-        if one in main_colors or  one in secondary_colors.keys():
+        if one in main_colors or one in secondary_colors.keys():
             found_colors.append(one)
         elif str(second) in main_colors or second in secondary_colors.keys():
             found_colors.append(second)
@@ -806,6 +803,92 @@ def paint_colors():
                 found_colors.remove(color)
 
     print(found_colors)
+
+
+def sum_matrix_elements():
+    row, column = map(int, input().split(", "))
+    sum_of_numbers = 0
+    matrix = []
+    for _ in range(row):
+        list_of_numbers = list(map(int, input().split(", ")))
+        matrix.append(list_of_numbers)
+        sum_of_numbers += sum(list_of_numbers)
+    print(sum_of_numbers)
+    print(matrix)
+
+
+def even_matrix():
+    matrix = []
+    for _ in range(int(input())):
+        matrix.append([int(num) for num in input().split(", ") if int(num) % 2 == 0])
+    print(matrix)
+
+
+def flattening_matrix():
+    matrix = []
+    for _ in range(int(input())):
+        matrix.append([int(num) for num in input().split(", ")])
+    print([num for row in matrix for num in row])
+
+
+def sum_matrix_columns():
+    matrix = []
+    rows, column = map(int, input().split(", "))
+
+    for _ in range(rows):
+        matrix.append([int(num) for num in input().split()])
+
+    for col in range(column):
+        sum_of_col = 0
+        for row in range(rows):
+            sum_of_col += matrix[row][col]
+        print(sum_of_col)
+
+
+def primary_diagonal():
+    matrix = []
+    n = int(input())
+    for _ in range(n):
+        matrix.append([int(num) for num in input().split()])
+    print(sum([matrix[i][i] for i in range(n)]))
+
+
+def symbol_in_matrix():
+    matrix = []
+    for _ in range(int(input())):
+        matrix.append(input())
+    symbol = input()
+    row = [i for i in range(len(matrix)) if symbol in matrix[i]]
+    if row:
+        col = matrix[row[0]].index(symbol)
+        print(f"({row[0]}, {col})")
+    else:
+        print(f"{symbol} does not occur in the matrix")
+
+
+def square_with_maximum_sum():
+    row, column = map(int, input().split(", "))
+    matrix = []
+    for _ in range(row):
+
+        list_of_numbers = list(map(int, input().split(", ")))
+        matrix.append(list_of_numbers)
+
+    sum_of_square = 0
+    best_square = []
+    for i in range(0, row-1):
+        for j in range(0, column-1):
+            current_sum = matrix[i][j] + matrix[i][j+1] + matrix[i+1][j] + matrix[i+1][j+1]
+            if current_sum > sum_of_square:
+                sum_of_square = current_sum
+                best_square = [[matrix[i][j], matrix[i][j+1]], [matrix[i+1][j], matrix[i+1][j+1]]]
+
+    num = len(best_square)
+    for i in range(num):
+        print(" ".join(map(str, best_square[i])))
+
+    print(sum_of_square)
+
 
 if __name__ == '__main__':
     pass
