@@ -1108,26 +1108,27 @@ def miner():
     else:
         print(f"{len(coal)} pieces of coal left. ({s_coord[0]}, {s_coord[1]})")
 
-def bunnies_spred(field, current_bunnies_coordinates):
 
+def bunnies_spred(field, current_bunnies_coordinates):
     new_bunnies = set()
     person_dead = False
 
-    spreading_bunnies = [ (-1, 0), (1, 0), (0, -1), (0, 1)  ]
+    spreading_bunnies = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     for bunny in current_bunnies_coordinates:
         for row, col in spreading_bunnies:
-            if 0 <= bunny[0]+row < len(field) and 0 <= bunny[1] + col < len(field[0]):
-                new_bunnies.add((bunny[0]+row, bunny[1]+col))
-                if field[bunny[0]+row][bunny[1]+col] == "P":
+            if 0 <= bunny[0] + row < len(field) and 0 <= bunny[1] + col < len(field[0]):
+                new_bunnies.add((bunny[0] + row, bunny[1] + col))
+                if field[bunny[0] + row][bunny[1] + col] == "P":
                     person_dead = True
                 field[bunny[0] + row][bunny[1] + col] = "B"
 
     return field, current_bunnies_coordinates.union(new_bunnies), person_dead
 
+
 def radioactive_mutate_vampire_bunnies():
     row, col = map(int, input().split())
     the_field = []
-    person_row, person_col = float("inf"), -100
+    person_row, person_col = -100, -100
     bunnies_coordinates = set()
 
     person_won = False
@@ -1135,7 +1136,7 @@ def radioactive_mutate_vampire_bunnies():
     person_dead_under_bunnies = False
 
     for index_row in range(row):
-        line = list(input())
+        line = list(input().strip())
         the_field.append(line)
         for index_col, char in enumerate(line):
             if char == "P":
@@ -1167,7 +1168,7 @@ def radioactive_mutate_vampire_bunnies():
         the_field, bunnies_coordinates, person_dead_under_bunnies = bunnies_spred(the_field, bunnies_coordinates)
 
         if person_dead or person_won or person_dead_under_bunnies:
-                break
+            break
 
     for line in the_field:
         print(*line, sep="")
@@ -1178,16 +1179,119 @@ def radioactive_mutate_vampire_bunnies():
         print(f"dead: {person_row} {person_col}")
 
 
-
-radioactive_mutate_vampire_bunnies()
-
-
 def knight_game():
-    matrix = [list(input()) for _ in range(int(input()))]
-    print(*matrix)
+    matrix = []
+    knight_coordinates = []
+
+    for row in range(int(input())):
+        line = list(input().strip())
+        matrix.append(line)
+        for index, char in enumerate(line):
+            if char == "K":
+                knight_coordinates.append([row, index])
+
+    movements = {(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)}
+
+    knight_removed = 0
+
+    while True:
+        knight_to_remove = None
+        max_attacked_knights = 0
+
+        for knight in knight_coordinates:
+            attacked_knights = 0
+            for move in movements:
+                target_row, target_col = knight[0] + move[0], knight[1] + move[1]
+                if 0 <= target_row < len(matrix) and 0 <= target_col < len(matrix[0]):
+                    if matrix[target_row][target_col] == "K":
+                        attacked_knights += 1
+
+            if attacked_knights > max_attacked_knights:
+                knight_to_remove = [knight[0], knight[1]]
+                max_attacked_knights = attacked_knights
+
+        if max_attacked_knights > 0:
+            matrix[knight_to_remove[0]][knight_to_remove[1]] = "0"
+            knight_coordinates.remove(knight_to_remove)
+            knight_removed += 1
+        else:
+            break
+
+    print(knight_removed)
 
 
-# knight_game()
+def easter_bunny():
+    row = int(input().strip())
+    bunnies_field = []
+    bunny_row = float("-inf")
+    bunny_col = float("-inf")
+
+    for row_n in range(row):
+        bunny_line = list(input().split())
+        bunnies_field.append(bunny_line)
+        if "B" in bunny_line:
+            bunny_row = row_n
+            bunny_col = bunny_line.index("B")
+
+    movements = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+    total_max_eggs = float("-inf")
+    best_move = ""
+    bunnies_way = []
+
+    for move in movements:
+        bunnies_line = []
+        total_eggs = 0
+        new_row, new_col = movements[move](bunny_row, bunny_col)
+
+        while 0 <= new_row < row and 0 <= new_col < row:
+
+            if bunnies_field[new_row][new_col] == "X":
+                break
+            else:
+                total_eggs += int(bunnies_field[new_row][new_col])
+                bunnies_field[new_row][new_col] = "."
+
+                current_row = new_row
+                current_col = new_col
+
+                bunnies_line.append([current_row, current_col])
+                new_row, new_col = movements[move](current_row, current_col)
+
+        if total_eggs > total_max_eggs and len(bunnies_line) > 0:
+            best_move = move
+            total_max_eggs = total_eggs
+            bunnies_way = bunnies_line.copy()
+
+    print(best_move)
+    for coord in bunnies_way:
+        print(coord)
+    print(total_max_eggs)
+
+
+def alice_in_wonderland():
+    pass
+
+
+alice_in_wonderland()
+
+
+def range_day():
+    pass
+
+
+range_day()
+
+
+def present_delivery():
+    pass
+
+
+present_delivery()
 
 if __name__ == '__main__':
     pass
