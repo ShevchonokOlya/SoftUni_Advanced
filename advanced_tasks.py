@@ -1,3 +1,6 @@
+from dataclasses import field
+
+
 def reverse_string(text_to_invert: str) -> str:
     text = list(text_to_invert)
     stack = []
@@ -870,18 +873,17 @@ def square_with_maximum_sum():
     row, column = map(int, input().split(", "))
     matrix = []
     for _ in range(row):
-
         list_of_numbers = list(map(int, input().split(", ")))
         matrix.append(list_of_numbers)
 
     sum_of_square = 0
     best_square = []
-    for i in range(0, row-1):
-        for j in range(0, column-1):
-            current_sum = matrix[i][j] + matrix[i][j+1] + matrix[i+1][j] + matrix[i+1][j+1]
+    for i in range(0, row - 1):
+        for j in range(0, column - 1):
+            current_sum = matrix[i][j] + matrix[i][j + 1] + matrix[i + 1][j] + matrix[i + 1][j + 1]
             if current_sum > sum_of_square:
                 sum_of_square = current_sum
-                best_square = [[matrix[i][j], matrix[i][j+1]], [matrix[i+1][j], matrix[i+1][j+1]]]
+                best_square = [[matrix[i][j], matrix[i][j + 1]], [matrix[i + 1][j], matrix[i + 1][j + 1]]]
 
     num = len(best_square)
     for i in range(num):
@@ -889,6 +891,329 @@ def square_with_maximum_sum():
 
     print(sum_of_square)
 
+
+def diagonals():
+    matrix = [[int(num) for num in input().split(", ")] for _ in range(int(input()))]
+    primary_diagonal = [matrix[i][i] for i in range(len(matrix))]
+    secondary_diagonal = [matrix[i][-i - 1] for i in range(len(matrix))]
+
+    print(f"Primary diagonal: {', '.join(map(str, primary_diagonal))}. Sum: {sum(primary_diagonal)}")
+    print(f"Secondary diagonal: {', '.join(map(str, secondary_diagonal))}. Sum: {sum(secondary_diagonal)}")
+
+
+def diagonal_difference():
+    matrix = []
+    for _ in range(int(input())):
+        matrix.append([int(num) for num in input().split()])
+
+    primary_diagonal = [matrix[i][i] for i in range(len(matrix))]
+    secondary_diagonal = [matrix[i][-i - 1] for i in range(len(matrix))]
+    difference = abs(sum(primary_diagonal) - sum(secondary_diagonal))
+    print(difference)
+
+
+def squares_in_matrix():
+    n, m = map(int, input().split())
+    matrix = []
+    for _ in range(n):
+        matrix.append(input().split())
+
+    count = 0
+    for i in range(n - 1):
+        for j in range(m - 1):
+            if matrix[i][j] == matrix[i][j + 1] == matrix[i + 1][j] == matrix[i + 1][j + 1]:
+                count += 1
+    print(count)
+
+
+def maximal_sum():
+    row, column = map(int, input().split())
+    matrix = []
+    for _ in range(row):
+        list_of_numbers = list(map(int, input().split()))
+        matrix.append(list_of_numbers)
+
+    best_square = []
+    sum_of_square = float('-inf')
+
+    for i in range(0, row - 2):
+        for j in range(0, column - 2):
+            current_sum = (matrix[i][j] + matrix[i][j + 1] + matrix[i][j + 2] +
+                           matrix[i + 1][j] + matrix[i + 1][j + 1] + matrix[i + 1][j + 2] +
+                           matrix[i + 2][j] + matrix[i + 2][j + 1] + matrix[i + 2][j + 2])
+
+            if current_sum > sum_of_square:
+                sum_of_square = current_sum
+                best_square = [[matrix[i][j], matrix[i][j + 1], matrix[i][j + 2]],
+                               [matrix[i + 1][j], matrix[i + 1][j + 1], matrix[i + 1][j + 2]],
+                               [matrix[i + 2][j], matrix[i + 2][j + 1], matrix[i + 2][j + 2]]]
+
+    print(f"Sum = {sum_of_square}")
+    if best_square:
+        for i in range(0, 3):
+            print(" ".join(map(str, best_square[i])))
+
+
+def matrix_of_palindromes():
+    row, column = map(int, input().split())
+    matrix = []
+    for i in range(row):
+        matrix.append([""] * column)
+        for j in range(column):
+            matrix[i][j] = f"{chr(97 + i)}{chr(97 + i + j)}{chr(97 + i)}"
+
+        print(*matrix[i])
+
+
+def matrix_shuffling():
+    r, c = map(int, input().split())
+    matrix = [[num for num in input().split()] for _ in range(r)]
+    while True:
+        command = input().split()
+        if command[0] == "END":
+            break
+        elif command[0] == "swap" and len(command) == 5:
+            first_row, first_column, second_row, second_col = map(int, command[1:])
+            if 0 <= first_row < r and 0 <= first_column < c and 0 <= second_row < r and 0 <= second_col < c:
+                matrix[first_row][first_column], matrix[second_row][second_col] = matrix[second_row][second_col], \
+                    matrix[first_row][first_column]
+                print(*[" ".join(line) for line in matrix], sep="\n")
+
+            else:
+                print("Invalid input!")
+        else:
+            print("Invalid input!")
+
+
+def snake_moves():
+    from collections import deque
+    row, col = map(int, input().split())
+    snake = deque(input())
+    matrix = []
+
+    for row_number in range(row):
+        multiplier = (col // len(snake)) + 1
+        cur_snake = (list(snake) * multiplier)[:col]
+
+        matrix.append([""] * col)
+        if row_number % 2 == 0:
+            matrix[row_number] = list(cur_snake)[:col]
+        else:
+            matrix[row_number] = list(cur_snake)[:col][::-1]
+
+        snake.rotate(-col)
+
+    for mat_row in matrix:
+        print(*mat_row, sep="")
+
+
+def flatten_lists():
+    matrix = [[int(num) for num in line.split()] for line in input().split("|") if line]
+    final_output = []
+
+    for i in range(len(matrix) - 1, -1, -1):
+        final_output.extend(matrix[i])
+
+    print(*final_output)
+
+
+def validate_coordinates(row_num, col_num, matrix):
+    return 0 <= row_num < len(matrix) and 0 <= col_num < len(matrix[0])
+
+
+def matrix_modification():
+    matrix = [list(map(int, input().split())) for _ in range(int(input()))]
+
+    while True:
+        command = input().split()
+        if command[0] == "END":
+            break
+
+        if validate_coordinates(int(command[1]), int(command[2]), matrix):
+            if command[0] == "Add" and len(command) == 4:
+                matrix[int(command[1])][int(command[2])] += int(command[3])
+            elif command[0] == "Subtract" and len(command) == 4:
+                matrix[int(command[1])][int(command[2])] -= int(command[3])
+        else:
+            print("Invalid coordinates")
+
+    for row in matrix:
+        print(*row)
+
+
+def validate_matr_coordinates(row_num, col_num, matrix):
+    return 0 <= row_num < len(matrix) and 0 <= col_num < len(matrix[0])
+
+
+def bombs():
+    matrix = []
+    for _ in range(int(input())):
+        matrix.append(list(map(int, input().split())))
+    coordinates = [[int(coord[0]), int(coord[1])] for coord in [coord.split(",") for coord in input().split()]]
+
+    for coord in coordinates:
+        row, col = map(int, coord)
+        if matrix[row][col] > 0:
+            bomb_cel_value = matrix[row][col]
+            for mat_row in range(row - 1, row + 2):
+                for mat_col in range(col - 1, col + 2):
+                    if validate_matr_coordinates(mat_row, mat_col, matrix) and matrix[mat_row][mat_col] > 0:
+                        matrix[mat_row][mat_col] -= bomb_cel_value
+            matrix[row][col] = 0
+
+    alive_list = [num for row in matrix for num in row if num > 0]
+    print(f"Alive cells: {len(alive_list)}")
+    print(f"Sum: {sum(alive_list)}")
+
+    for mat_row in matrix:
+        print(*mat_row, sep=" ")
+
+
+def miner():
+    field_size = int(input())
+    movement_commands = input().split()
+    s_coord = []
+    coal = []
+    the_field = []
+
+    for index_row in range(field_size):
+        line = input().split()
+        the_field.append(line)
+        if "s" in line:
+            s_coord = [index_row, line.index("s")]
+        c_indexes = [i for i, char in enumerate(line) if char == 'c']
+        for c_index in c_indexes:
+            coal.append([index_row, c_index])
+
+    movements = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    for move in movement_commands:
+        new_row, new_col = movements[move](s_coord[0], s_coord[1])
+        if 0 <= new_col < field_size and 0 <= new_row < field_size:
+            s_coord = [new_row, new_col]
+            if the_field[new_row][new_col] == "e":
+                print(f"Game over! ({new_row}, {new_col})")
+                return
+            elif the_field[new_row][new_col] == "c":
+                the_field[new_row][new_col] = "*"
+                coal.remove([new_row, new_col])
+
+    if not coal:
+        print(f"You collected all coal! ({s_coord[0]}, {s_coord[1]})")
+    else:
+        print(f"{len(coal)} pieces of coal left. ({s_coord[0]}, {s_coord[1]})")
+
+def person_movement(move:str, person_coord, field) -> str|None:
+
+    movements = {
+        "U": lambda x, y: (x - 1, y),
+        "D": lambda x, y: (x + 1, y),
+        "L": lambda x, y: (x, y - 1),
+        "R": lambda x, y: (x, y + 1),
+    }
+
+    new_row, new_col = movements[move](person_coord[0], person_coord[1])
+    field_rows = len(field)
+    field_cols = len(field[0])
+
+    if 0 <= new_col < field_cols and 0 <= new_row < field_rows:
+
+        if field[new_row][new_col] == "B":
+            field[person_coord[0]][person_coord[1]] = "."
+            person_coord[:] = [new_row, new_col]
+            return f"dead: {new_row} {new_col}"
+        else:
+            field[person_coord[0]][person_coord[1]] = "."
+            field[new_row][new_col] = "P"
+            person_coord[:] = [new_row, new_col]
+        return None
+    else:
+
+        field[person_coord[0]][person_coord[1]] = "."
+        return f"won: {person_coord[0]} {person_coord[1]}"
+
+def bunny_spreads(field, bunnies_coordinates)-> str | None:
+
+    return_need = False
+    field_rows = len(field)
+    field_cols = len(field[0])
+
+    for bunny_row, bunny_col in bunnies_coordinates:
+        bunnies_row_up = [bunny_row - 1,bunny_col]
+        bunnies_row_down = [bunny_row + 1,bunny_col]
+        bunnies_col_left = [bunny_row ,bunny_col - 1]
+        bunnies_col_right = [bunny_row ,bunny_col + 1]
+
+        bunny_spreading = [bunnies_row_up, bunnies_row_down, bunnies_col_left, bunnies_col_right]
+
+        new_bunnies = []
+        for bunny_row, bunny_col in bunny_spreading:
+
+            if bunny_col >= 0 and bunny_col < field_cols and bunny_row >= 0 and bunny_row < field_rows:
+                if field[bunny_row][bunny_col] == ".":
+                    field[bunny_row][bunny_col] = "B"
+                    if [bunny_row, bunny_col] not in bunnies_coordinates:
+                        new_bunnies.append([bunny_row, bunny_col])
+                elif field[bunny_row][bunny_col] == "P":
+                    return_need = True
+                    break
+
+        bunnies_coordinates.extend(new_bunnies)
+
+        if return_need:
+            return f"dead: {bunny_row} {bunny_col}"
+
+
+def radioactive_mutate_vampire_bunnies():
+    row, col = map(int, input().split())
+    the_field = []
+    person_coord = []
+    bunnies_coordinats = []
+    need_return = False
+
+    for index_row in range(row):
+        line = list(input())
+        the_field.append(line)
+        if "P" in line:
+            person_coord = [index_row, line.index("P")]
+
+        b_indexes = [i for i, char in enumerate(line) if char == 'B']
+        for b_index in b_indexes:
+            bunnies_coordinats.append([index_row, b_index])
+
+    movement_commands = list(input())
+    for move in movement_commands:
+        person_won_or_dead = person_movement(move, person_coord, the_field)
+        if person_won_or_dead:
+            need_return = True
+
+
+        bunny_string = bunny_spreads(the_field, bunnies_coordinats)
+        if bunny_string:
+            person_won_or_dead = bunny_string
+            need_return = True
+
+        if need_return:
+            for field_line in the_field:
+                print(*field_line, sep=" ")
+
+            print(person_won_or_dead)
+            return
+
+radioactive_mutate_vampire_bunnies()
+
+
+def knight_game():
+    matrix = [list(input()) for _ in range(int(input()))]
+    print(*matrix)
+
+
+# knight_game()
 
 if __name__ == '__main__':
     pass
