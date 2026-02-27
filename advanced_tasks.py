@@ -1108,7 +1108,40 @@ def miner():
     else:
         print(f"{len(coal)} pieces of coal left. ({s_coord[0]}, {s_coord[1]})")
 
-def person_movement(move:str, person_coord, field) -> str|None:
+def bunnies_spred(field, current_bunnies_coordinates):
+
+    new_bunnies = set()
+    person_dead = False
+
+    spreading_bunnies = [ (-1, 0), (1, 0), (0, -1), (0, 1)  ]
+    for bunny in current_bunnies_coordinates:
+        for row, col in spreading_bunnies:
+            if 0 <= bunny[0]+row < len(field) and 0 <= bunny[1] + col < len(field[0]):
+                new_bunnies.add((bunny[0]+row, bunny[1]+col))
+                if field[bunny[0]+row][bunny[1]+col] == "P":
+                    person_dead = True
+                field[bunny[0] + row][bunny[1] + col] = "B"
+
+    return field, current_bunnies_coordinates.union(new_bunnies), person_dead
+
+def radioactive_mutate_vampire_bunnies():
+    row, col = map(int, input().split())
+    the_field = []
+    person_row, person_col = float("inf"), -100
+    bunnies_coordinates = set()
+
+    person_won = False
+    person_dead = False
+    person_dead_under_bunnies = False
+
+    for index_row in range(row):
+        line = list(input())
+        the_field.append(line)
+        for index_col, char in enumerate(line):
+            if char == "P":
+                person_row, person_col = index_row, index_col
+            elif char == "B":
+                bunnies_coordinates.add((index_row, index_col))
 
     movements = {
         "U": lambda x, y: (x - 1, y),
@@ -1116,94 +1149,35 @@ def person_movement(move:str, person_coord, field) -> str|None:
         "L": lambda x, y: (x, y - 1),
         "R": lambda x, y: (x, y + 1),
     }
+    commands = list(input())
 
-    new_row, new_col = movements[move](person_coord[0], person_coord[1])
-    field_rows = len(field)
-    field_cols = len(field[0])
+    for command in commands:
+        new_row, new_col = movements[command](person_row, person_col)
+        the_field[person_row][person_col] = "."
 
-    if 0 <= new_col < field_cols and 0 <= new_row < field_rows:
-
-        if field[new_row][new_col] == "B":
-            field[person_coord[0]][person_coord[1]] = "."
-            person_coord[:] = [new_row, new_col]
-            return f"dead: {new_row} {new_col}"
+        if 0 <= new_col < col and 0 <= new_row < row:
+            if the_field[new_row][new_col] == "B":
+                person_dead = True
+            else:
+                the_field[new_row][new_col] = "P"
+            person_row, person_col = new_row, new_col
         else:
-            field[person_coord[0]][person_coord[1]] = "."
-            field[new_row][new_col] = "P"
-            person_coord[:] = [new_row, new_col]
-        return None
-    else:
+            person_won = True
 
-        field[person_coord[0]][person_coord[1]] = "."
-        return f"won: {person_coord[0]} {person_coord[1]}"
+        the_field, bunnies_coordinates, person_dead_under_bunnies = bunnies_spred(the_field, bunnies_coordinates)
 
-def bunny_spreads(field, bunnies_coordinates)-> str | None:
+        if person_dead or person_won or person_dead_under_bunnies:
+                break
 
-    return_need = False
-    field_rows = len(field)
-    field_cols = len(field[0])
+    for line in the_field:
+        print(*line, sep="")
 
-    for bunny_row, bunny_col in bunnies_coordinates:
-        bunnies_row_up = [bunny_row - 1,bunny_col]
-        bunnies_row_down = [bunny_row + 1,bunny_col]
-        bunnies_col_left = [bunny_row ,bunny_col - 1]
-        bunnies_col_right = [bunny_row ,bunny_col + 1]
-
-        bunny_spreading = [bunnies_row_up, bunnies_row_down, bunnies_col_left, bunnies_col_right]
-
-        new_bunnies = []
-        for bunny_row, bunny_col in bunny_spreading:
-
-            if bunny_col >= 0 and bunny_col < field_cols and bunny_row >= 0 and bunny_row < field_rows:
-                if field[bunny_row][bunny_col] == ".":
-                    field[bunny_row][bunny_col] = "B"
-                    if [bunny_row, bunny_col] not in bunnies_coordinates:
-                        new_bunnies.append([bunny_row, bunny_col])
-                elif field[bunny_row][bunny_col] == "P":
-                    return_need = True
-                    break
-
-        bunnies_coordinates.extend(new_bunnies)
-
-        if return_need:
-            return f"dead: {bunny_row} {bunny_col}"
+    if person_won:
+        print(f"won: {person_row} {person_col}")
+    if person_dead or person_dead_under_bunnies:
+        print(f"dead: {person_row} {person_col}")
 
 
-def radioactive_mutate_vampire_bunnies():
-    row, col = map(int, input().split())
-    the_field = []
-    person_coord = []
-    bunnies_coordinats = []
-    need_return = False
-
-    for index_row in range(row):
-        line = list(input())
-        the_field.append(line)
-        if "P" in line:
-            person_coord = [index_row, line.index("P")]
-
-        b_indexes = [i for i, char in enumerate(line) if char == 'B']
-        for b_index in b_indexes:
-            bunnies_coordinats.append([index_row, b_index])
-
-    movement_commands = list(input())
-    for move in movement_commands:
-        person_won_or_dead = person_movement(move, person_coord, the_field)
-        if person_won_or_dead:
-            need_return = True
-
-
-        bunny_string = bunny_spreads(the_field, bunnies_coordinats)
-        if bunny_string:
-            person_won_or_dead = bunny_string
-            need_return = True
-
-        if need_return:
-            for field_line in the_field:
-                print(*field_line, sep=" ")
-
-            print(person_won_or_dead)
-            return
 
 radioactive_mutate_vampire_bunnies()
 
