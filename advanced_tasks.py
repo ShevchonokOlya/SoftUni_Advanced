@@ -1274,24 +1274,204 @@ def easter_bunny():
 
 
 def alice_in_wonderland():
-    pass
+    n = int(input())
+    alice_row = float("-inf")
+    alice_col = float("-inf")
+    tea_bags = 0
 
+    the_field = []
+    for row in range(n):
+        line = list(input().split())
+        the_field.append(line)
+        if "A" in line:
+            alice_row = row
+            alice_col = line.index("A")
+            the_field[alice_row][alice_col] = "*"
 
-alice_in_wonderland()
+    movements = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    while True:
+        movement_command = input().strip()
+        new_row, new_col = movements[movement_command](alice_row, alice_col)
+
+        if 0 <= new_row < n and 0 <= new_col < n:
+            if the_field[new_row][new_col] == "R":
+
+                print("Alice didn't make it to the tea party.")
+                the_field[new_row][new_col] = "*"
+                break
+            else:
+                if the_field[new_row][new_col].isdigit():
+                    tea_bags += int(the_field[new_row][new_col])
+                alice_row, alice_col = new_row, new_col
+                the_field[alice_row][alice_col] = "*"
+
+                if tea_bags >= 10:
+                    print("She did it! She went to the party.")
+                    break
+
+        else:
+            print("Alice didn't make it to the tea party.")
+            break
+
+    for line in the_field:
+        print(*line, sep=" ")
 
 
 def range_day():
-    pass
+    MATRIX_SIZE = 5
+    matrix = []
+    shooter_row = float("-inf")
+    shooter_col = float("-inf")
+    targets = []
+    shot_targets = []
+
+    for row in range(MATRIX_SIZE):
+        line = list(input().split())
+        matrix.append(line)
+        if "A" in line:
+            shooter_row = row
+            shooter_col = line.index("A")
+        for index in range(len(line)):
+            if line[index] == "x":
+                targets.append([row, index])
+    directions = {
+        "up": [-1, 0],
+        "down": [1, 0],
+        "left": [0, -1],
+        "right": [0, 1],
+    }
+
+    for _ in range(int(input())):
+        commands = input().split()
+        if commands[0] == "move":
+            steps = int(commands[2])
+            new_row = shooter_row + (directions[commands[1]][0]) * steps
+            new_col = shooter_col + directions[commands[1]][1] * steps
+
+            if 0 <= new_row < MATRIX_SIZE and 0 <= new_col < MATRIX_SIZE and matrix[new_row][new_col] == ".":
+                shooter_row, shooter_col = new_row, new_col
 
 
-range_day()
+        elif commands[0] == "shoot":
+            target_row, target_col = directions[commands[1]][0] + shooter_row, directions[commands[1]][1] + shooter_col
+
+            if not (0 <= target_row < MATRIX_SIZE and 0 <= target_col < MATRIX_SIZE):
+                continue
+
+            while matrix[target_row][target_col] != "x":
+                target_row += directions[commands[1]][0]
+                target_col += directions[commands[1]][1]
+
+                if not (0 <= target_row < MATRIX_SIZE and 0 <= target_col < MATRIX_SIZE):
+                    break
+            else:
+                matrix[target_row][target_col] = "."
+
+                targets.remove([target_row, target_col])
+                shot_targets.append([target_row, target_col])
+
+                if not targets:
+                    break
+
+    if not targets:
+        print(f"Training completed! All {len(shot_targets)} targets hit.")
+    else:
+        print(f"Training not completed! {len(targets)} targets left.")
+
+    if shot_targets:
+        print(*shot_targets, sep="\n")
 
 
 def present_delivery():
-    pass
+    count_of_presents = int(input().strip())
+    neighborhood = []
+    santa_row = float("-inf")
+    santa_col = float("-inf")
+    naughty_kids = []
+    nice_kids = []
 
+    for row in range(int(input().strip())):
+        line = list(input().split())
+        neighborhood.append(line)
 
-present_delivery()
+        for index, kid in enumerate(line):
+            if kid == "S":
+                santa_row, santa_col = row, index
+
+            elif kid == "X":
+                naughty_kids.append([row, index])
+
+            elif kid == "V":
+                nice_kids.append([row, index])
+
+    nice_kids_with_present = 0
+
+    directions = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    while count_of_presents > 0:
+        movement_command = input().strip()
+        if movement_command == "Christmas morning":
+            break
+        new_row, new_col = directions[movement_command](santa_row, santa_col)
+
+        if 0 <= new_row < len(neighborhood) and 0 <= new_col < len(neighborhood[0]):
+
+            neighborhood[santa_row][santa_col] = "-"
+            santa_row, santa_col = new_row, new_col
+
+            if neighborhood[new_row][new_col] == "V":
+                count_of_presents -= 1
+                nice_kids_with_present += 1
+                nice_kids.remove([new_row, new_col])
+
+            elif neighborhood[new_row][new_col] == "X":
+                naughty_kids.remove([new_row, new_col])
+
+            elif neighborhood[new_row][new_col] == "C":
+
+                for direction in directions:
+                    cookie_generosity_row, cookie_generosity_col = directions[direction](new_row, new_col)
+                    if 0 <= cookie_generosity_row < len(neighborhood) and 0 <= cookie_generosity_col < len(
+                            neighborhood[0]):
+                        if neighborhood[cookie_generosity_row][cookie_generosity_col] == "-":
+                            continue
+                        elif neighborhood[cookie_generosity_row][cookie_generosity_col] == "V":
+                            nice_kids.remove([cookie_generosity_row, cookie_generosity_col])
+                            neighborhood[cookie_generosity_row][cookie_generosity_col] = "-"
+                            nice_kids_with_present += 1
+
+                        elif neighborhood[cookie_generosity_row][cookie_generosity_col] == "X":
+                            neighborhood[cookie_generosity_row][cookie_generosity_col] = "-"
+                            naughty_kids.remove([cookie_generosity_row, cookie_generosity_col])
+                        count_of_presents -= 1
+
+                        if count_of_presents <= 0:
+                            break
+
+            neighborhood[new_row][new_col] = "S"
+
+    if count_of_presents == 0 and len(nice_kids) > 0:
+        print("Santa ran out of presents!")
+
+    for line in neighborhood:
+        print(*line, sep=" ")
+
+    if not nice_kids:
+        print(f"Good job, Santa! {nice_kids_with_present} happy nice kid/s.")
+    else:
+        print(f"No presents for {len(nice_kids)} nice kid/s.")
+
 
 if __name__ == '__main__':
     pass
