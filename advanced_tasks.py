@@ -1,6 +1,3 @@
-from dataclasses import field
-
-
 def reverse_string(text_to_invert: str) -> str:
     text = list(text_to_invert)
     stack = []
@@ -894,10 +891,11 @@ def square_with_maximum_sum():
 
 def diagonals():
     matrix = [[int(num) for num in input().split(", ")] for _ in range(int(input()))]
-    primary_diagonal = [matrix[i][i] for i in range(len(matrix))]
+    primary_diagonal_of_matrix = [matrix[i][i] for i in range(len(matrix))]
     secondary_diagonal = [matrix[i][-i - 1] for i in range(len(matrix))]
 
-    print(f"Primary diagonal: {', '.join(map(str, primary_diagonal))}. Sum: {sum(primary_diagonal)}")
+    print(
+        f"Primary diagonal: {', '.join(map(str, primary_diagonal_of_matrix))}. Sum: {sum(primary_diagonal_of_matrix)}")
     print(f"Secondary diagonal: {', '.join(map(str, secondary_diagonal))}. Sum: {sum(secondary_diagonal)}")
 
 
@@ -906,9 +904,9 @@ def diagonal_difference():
     for _ in range(int(input())):
         matrix.append([int(num) for num in input().split()])
 
-    primary_diagonal = [matrix[i][i] for i in range(len(matrix))]
-    secondary_diagonal = [matrix[i][-i - 1] for i in range(len(matrix))]
-    difference = abs(sum(primary_diagonal) - sum(secondary_diagonal))
+    primary_matrix_diagonal = [matrix[i][i] for i in range(len(matrix))]
+    secondary_matrix_diagonal = [matrix[i][-i - 1] for i in range(len(matrix))]
+    difference = abs(sum(primary_matrix_diagonal) - sum(secondary_matrix_diagonal))
     print(difference)
 
 
@@ -1472,6 +1470,306 @@ def present_delivery():
     else:
         print(f"No presents for {len(nice_kids)} nice kid/s.")
 
+
+def multiply(*args: int) -> int:
+    result_number = 1
+    for arg in args:
+        result_number *= arg
+    return result_number
+
+
+def get_info(**kwargs) -> str:
+    return f"This is {kwargs.get('name')} from {kwargs.get('town')} and he is {kwargs.get('age')} years old"
+
+
+def sorting_cheeses(**cheese_dict) -> str:
+    string_res = ""
+    sorted_cheeses = sorted(cheese_dict.items(), key=lambda kvp: (-len(kvp[1]), kvp[0]))
+
+    for cheese, value in sorted_cheeses:
+
+        string_res += f"{cheese}\n"
+        sorted_value = sorted(value, reverse=True)
+        for val in sorted_value:
+            string_res += f"{val}\n"
+
+    return string_res
+
+
+def rectangle(side1, side2):
+    res = f"Enter valid values!"
+
+    def area():
+        return side1 * side2
+
+    def perimeter():
+        return 2 * (side1 + side2)
+
+    if isinstance(side1, int) and isinstance(side2, int):
+        res = f"Rectangle area: {area()}\nRectangle perimeter: {perimeter()}"
+
+    return res
+
+
+def recursive_power(number: int, power: int):
+    if power < 2:
+        return number
+    else:
+        return number * recursive_power(number, power - 1)
+
+
+def operate(sign: str, *args: int) -> int:
+    from functools import reduce
+    result_number = float("-inf")
+
+    def sum_num(*numbers: int) -> int:
+        return reduce(lambda x, y: x + y, numbers)
+
+    def reduce_num(*numbers: int) -> int:
+        return reduce(lambda x, y: x - y, numbers)
+
+    def multiple_num(*numbers: int) -> int:
+        return reduce(lambda x, y: x * y, numbers)
+
+    def divide_num(*numbers: int) -> int:
+        return reduce(lambda x, y: x / y, numbers)
+
+    signs = {
+        "+": sum_num,
+        "-": reduce_num,
+        "*": multiple_num,
+        "/": divide_num
+    }
+
+    result_number = signs[sign](*args)
+
+    return result_number
+
+
+def operate2(sign: str, *args: int) -> int:
+    signs = {
+        "+": lambda x, y: x + y,
+        "-": lambda x, y: x - y,
+        "*": lambda x, y: x * y,
+        "/": lambda x, y: x / y,
+    }
+
+    def recurs(sign_el: str, *func_args: int) -> int:
+        if len(func_args) == 1:
+            return func_args[0]
+        else:
+            return signs[sign_el](recurs(sign_el, *func_args[:-1]), func_args[-1])
+
+    result_number = recurs(sign, *args)
+
+    return result_number
+
+
+def positive_not_positive_num():
+    def negative_vs_positive(*numbers_line: int):
+        positive_sum = 0
+        negative_sum = 0
+
+        for number in numbers_line:
+            if number > 0:
+                positive_sum += number
+            elif number < 0:
+                negative_sum += number
+        return positive_sum, negative_sum
+
+    numbers = map(int, input().split())
+    pos, neg = negative_vs_positive(*numbers)
+    print(neg)
+    print(pos)
+    if pos < abs(neg):
+        print(f"The negatives are stronger than the positives")
+    else:
+        print(f"The positives are stronger than the negatives")
+
+
+def kwargs_length(**kwargs):
+    return len(kwargs)
+
+
+# dictionary = {'name': 'Peter', 'age': 25}
+# print(kwargs_length(**dictionary))
+#
+# dictionary = {}
+# print(kwargs_length(**dictionary))
+
+
+def odd_numbers(*args) -> list:
+    return [num for num in args if num % 2 == 1]
+
+
+def even_numbers(*args) -> list:
+    return [num for num in args if num % 2 == 0]
+
+
+def even_odd(*numb_args) -> list:
+    type_mapper = {
+        "odd": odd_numbers,
+        "even": even_numbers,
+    }
+    return type_mapper[numb_args[-1]](*numb_args[:len(numb_args) - 1])
+
+
+#
+# print(even_odd(1, 2, 3, 4, 5, 6, "even"))
+# print(even_odd(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "odd"))
+
+def even_odd_filter(**kwargs):
+    type_mapper = {
+        "odd": odd_numbers,
+        "even": even_numbers,
+    }
+
+    for key, value in kwargs.items():
+        kwargs[key] = type_mapper[key](*value)
+    return dict(sorted(kwargs.items(), key=lambda x: len(x[1]), reverse=True))
+
+
+# print(even_odd_filter(
+#     odd=[1, 2, 3, 4, 10, 5],
+#     even=[3, 4, 5, 7, 10, 2, 5, 5, 2],
+# ))
+# print(even_odd_filter(
+#     odd=[2, 2, 30, 44, 10, 5],
+# ))
+
+
+def concatenate(*words, **replacements):
+    current_line = "".join(words)
+    for key, value in replacements.items():
+        current_line = current_line.replace(key, value)
+    return current_line
+
+
+#
+# print(concatenate("Soft", "UNI", "Is", "Grate", "!", UNI="Uni", Grate="Great"))
+# print(concatenate("I", " ", "Love", " ", "Cythons", C="P", s="", java='Java'))
+
+
+def make_upper(*strings):
+    result = tuple(s.upper() for s in strings)
+    return result
+
+
+def make_lower(*strings):
+    result = tuple(s.lower() for s in strings)
+    return result
+
+
+def sum_numbers(num1, num2):
+    return num1 + num2
+
+
+def multiply_numbers(num1, num2):
+    return num1 * num2
+
+
+def func_executor(*args):
+    result = []
+    for func, data in args:
+        result.append(f"{func.__name__} - {func(*data)}")
+    return "\n".join(result)
+
+
+#
+# print(func_executor(
+#     (make_upper, ("Python", "softUni")),
+#     (make_lower, ("PyThOn",)),
+# ))
+#
+# print(func_executor(
+#     (sum_numbers, (1, 2)),
+#     (multiply_numbers, (2, 4))
+# ))
+
+
+def grocery_store(**products):
+    products = dict(sorted(products.items(), key=lambda x: (- x[1], -len(x[0]), x[0])))
+    result_string = ""
+    for product_name, product_quantity in products.items():
+        result_string += f"{product_name}: {product_quantity}\n"
+    return result_string
+
+
+# print(grocery_store(
+#     bread=5,
+#     pasta=12,
+#     eggs=12,
+# ))
+# print(grocery_store(
+#     bread=2,
+#     pasta=2,
+#     eggs=20,
+#     carrot=1,
+# ))
+
+def age_assignment(*names, **ages):
+    result_string = ""
+    for name in sorted(names):
+        result_string += f"{name} is {ages[name[0]]} years old.\n"
+    return result_string
+
+
+# print(age_assignment("Peter", "George", G=26, P=19))
+# print(age_assignment("Amy", "Bill", "Willy", W=36, A=22, B=61))
+
+
+def palindrome(string_line, index=0):
+    if string_line[index] != string_line[-index - 1]:
+        return f"{string_line} is not a palindrome"
+
+    if index == len(string_line) // 2 and string_line[- index - 1] == string_line[index]:
+        return f"{string_line} is a palindrome"
+    else:
+        return palindrome(string_line, index + 1)
+
+
+# print(palindrome("abcba", 0))
+# print(palindrome("peter", 0))
+# print(palindrome("abccba", 0))
+
+def fill_the_box(height: int, length: int, width: int, *args):
+    box_amount = height * length * width
+    cubes = sum(args[:args.index("Finish")])
+
+    if cubes < box_amount:
+        return f"There is free space in the box. You could put {box_amount - cubes} more cubes."
+    else:
+        return f"No more free space! You have {cubes - box_amount} more cubes."
+
+
+# print(fill_the_box(2, 8, 2, 2, 1, 7, 3, 1, 5, "Finish"))
+# print(fill_the_box(5, 5, 2, 40, 11, 7, 3, 1, 5, "Finish"))
+# print(fill_the_box(10, 10, 10, 40, "Finish", 2, 15, 30))
+
+
+def math_operations(*numbers: float, **mathematical_operations):
+    operators = {
+        "a": lambda x, y: x + y,
+        "s": lambda x, y: x - y,
+        "d": lambda x, y: x / y if y != 0 else x,
+        "m": lambda x, y: x * y
+    }
+
+    keys = list(mathematical_operations.keys())
+
+    for index, number in enumerate(numbers):
+        current_key = keys[index % 4]
+        mathematical_operations[current_key] = operators[current_key](mathematical_operations[current_key], number)
+
+    result_string = ""
+    for k, v in sorted(mathematical_operations.items(), key=lambda x: (-x[1], x[0])):
+        result_string += f"{k}: {v:.1f}\n"
+    return result_string
+
+#
+# print(math_operations(2.1, 12.56, 0.0, -3.899, 6.0, -20.65, a=1, s=7, d=33, m=15))
+# print(math_operations(-1.0, 0.5, 1.6, 0.5, 6.1, -2.8, 80.0, a=0, s=(-2.3), d=0, m=0))
+# print(math_operations(6.0, a=0, s=0, d=5, m=0))
 
 if __name__ == '__main__':
     pass
