@@ -1520,7 +1520,6 @@ def recursive_power(number: int, power: int):
 
 def operate(sign: str, *args: int) -> int:
     from functools import reduce
-    result_number = float("-inf")
 
     def sum_num(*numbers: int) -> int:
         return reduce(lambda x, y: x + y, numbers)
@@ -1647,7 +1646,7 @@ def concatenate(*words, **replacements):
 
 #
 # print(concatenate("Soft", "UNI", "Is", "Grate", "!", UNI="Uni", Grate="Great"))
-# print(concatenate("I", " ", "Love", " ", "Cythons", C="P", s="", java='Java'))
+# print(concatenate("I", " ", "Love", " ", "Cython", C="P", s="", java='Java'))
 
 
 def make_upper(*strings):
@@ -1728,9 +1727,9 @@ def palindrome(string_line, index=0):
         return palindrome(string_line, index + 1)
 
 
-# print(palindrome("abcba", 0))
+# print(palindrome("madam", 0))
 # print(palindrome("peter", 0))
-# print(palindrome("abccba", 0))
+# print(palindrome("noon", 0))
 
 def fill_the_box(height: int, length: int, width: int, *args):
     box_amount = height * length * width
@@ -1766,10 +1765,231 @@ def math_operations(*numbers: float, **mathematical_operations):
         result_string += f"{k}: {v:.1f}\n"
     return result_string
 
+
 #
 # print(math_operations(2.1, 12.56, 0.0, -3.899, 6.0, -20.65, a=1, s=7, d=33, m=15))
 # print(math_operations(-1.0, 0.5, 1.6, 0.5, 6.1, -2.8, 80.0, a=0, s=(-2.3), d=0, m=0))
 # print(math_operations(6.0, a=0, s=0, d=5, m=0))
+def test_example():
+    numbers_list = list(map(int, input().split(", ")))
+    result = 1
+
+    for i in range(len(numbers_list)):
+        number = numbers_list[i]
+        if number <= 5:
+            result *= number
+        elif 5 < number <= 10:
+            result /= number
+
+    print(result)
+
+
+def repeat_text():
+    text = input()
+    try:
+        amount = int(input())
+        print(text * amount)
+    except ValueError:
+        print("Variable times must be an integer")
+
+
+class ValueCannotBeNegative(Exception):
+    pass
+
+
+def can_not_be_negative():
+    for _ in range(5):
+        number = int(input())
+        if number < 0:
+            raise ValueCannotBeNegative
+
+
+def numbers_dictionary_function():
+    numbers_dictionary = {}
+    line = input().strip()
+
+    while line != "Search":
+        number_as_string = line
+        try:
+            number = int(input())
+
+        except ValueError:
+            print("The variable number must be an integer")
+        else:
+            numbers_dictionary[number_as_string] = number
+
+        line = input().strip()
+
+    searched = input()
+    while searched != "Remove":
+        try:
+            print(numbers_dictionary[searched])
+        except KeyError:
+            print("Number does not exist in dictionary")
+        searched = input()
+
+    end_line = input()
+    while end_line != "End":
+        try:
+            del numbers_dictionary[end_line]
+        except KeyError:
+            print("Number does not exist in dictionary")
+        end_line = input()
+
+    print(numbers_dictionary)
+
+
+class NameTooShortError(Exception):
+    pass
+
+
+class MustContainAtSymbolError(Exception):
+    pass
+
+
+class InvalidDomainError(Exception):
+    pass
+
+
+def email_validator():
+    min_len = 5
+    while True:
+        email = input().strip()
+        if email == "End":
+            break
+        if "@" not in email:
+            raise MustContainAtSymbolError("Email must contain @")
+        if len(email[:email.index("@")]) < min_len:
+            raise NameTooShortError("Name must be more than 4 characters")
+        if email[email.index(".") + 1:] not in ["com", "bg", "org", "net"]:
+            raise InvalidDomainError("Domain must be one of the following: .com, .bg, .org, .net")
+
+        print("Email is valid")
+
+
+class PasswordTooShortError(Exception):
+    pass
+
+
+class PasswordTooCommonError(Exception):
+    pass
+
+
+class PasswordNoSpecialCharactersError(Exception):
+    pass
+
+
+class PasswordContainsSpacesError(Exception):
+    pass
+
+
+def password_validator():
+    import re
+    while True:
+        password = input().strip()
+        if password == "Done":
+            break
+        if len(password) < 8:
+            raise PasswordTooShortError("Password must contain at least 8 characters")
+        res_digit = [password.isdigit() for password in password]
+        res = any(res_digit)
+        if not (any(password.isalpha() for password in password) and res):
+            raise PasswordTooCommonError("Password must be a combination of digits, letters, and special characters")
+
+        pattern = re.compile(r"[@*&%]+")
+        matches = re.findall(pattern, password)
+        if len(matches) == 0:
+            raise PasswordNoSpecialCharactersError("Password must contain at least 1 special character")
+
+        if any(c.isspace() for c in password):
+            raise PasswordContainsSpacesError("Password must not contain empty spaces")
+
+        print("Password is valid")
+
+
+def mat_rotation():
+    class MatrixContentError(Exception):
+        pass
+
+    class MatrixSizeError(Exception):
+        pass
+
+    def rotate_matrix(matrix):
+        matrix_length = len(matrix)
+
+        for i in range(matrix_length):
+            for j in range(i, matrix_length):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        for i in range(matrix_length):
+            matrix[i].reverse()
+
+    mtrx = []
+
+    while True:
+        line = input().split()
+
+        if len([num for num in line if num.isdigit() == False]) > 0:
+            raise MatrixContentError("The matrix must consist of only integers")
+
+        if not line:
+            break
+        mtrx.append(line)
+
+    if len(mtrx[0]) != len(mtrx):
+        raise MatrixSizeError("The size of the matrix is not a perfect square")
+
+    rotate_matrix(mtrx)
+
+    for row in mtrx:
+        print(*row, sep=' ')
+
+
+def online_banking():
+    class MoneyNotEnoughError(Exception):
+        pass
+
+    class PINCodeError(Exception):
+        pass
+
+    class UnderageTransactionError(Exception):
+        pass
+
+    class MoneyIsNegativeError(Exception):
+        pass
+
+    pin_code, initial_balance, age = list(map(int, input().split(", ")))
+
+    while True:
+        command = input()
+        if command == "End":
+            break
+        commands = command.split("#")
+        send_or_receive = commands[0]
+        if send_or_receive == "Send Money":
+            money = int(commands[1])
+            if money >= initial_balance:
+                raise MoneyNotEnoughError("Insufficient funds for the requested transaction")
+
+            if pin_code != int(commands[2]):
+                raise PINCodeError("Invalid PIN code")
+
+            if age < 18:
+                raise UnderageTransactionError("You must be 18 years or older to perform online transactions")
+
+            initial_balance -= money
+            print(f"Successfully sent {money:.2f} money to a friend\nThere is {initial_balance:.2f} money left in the bank account")
+
+
+        elif send_or_receive == "Receive Money":
+            money = int(commands[1])/2
+            if money < 0:
+                raise MoneyIsNegativeError("The amount of money cannot be a negative number")
+
+            initial_balance += money
+            print(f"{money:.2f} money went straight into the bank account")
+
+
 
 if __name__ == '__main__':
     pass
