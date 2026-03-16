@@ -1,4 +1,5 @@
 import re
+from fileinput import close
 
 from costants import path_dir
 import os
@@ -97,5 +98,86 @@ def word_counter_in_file():
         for word in sorted(result.items(), key= lambda x : -x[1]):
             file.write(f'{word[0]} - { word[1]}\n')
 
-create_file_list_of_words()
-word_counter_in_file()
+# create_file_list_of_words()
+# word_counter_in_file()
+
+
+def even_lines():
+
+    from costants import path_dir
+    import os
+    path2 = os.path.join(path_dir, "files", "text_even.txt")
+    with open(path2, 'r') as file:
+        for index, line in enumerate(file):
+            if index % 2 == 0:
+                for ch in "-,.!?":
+                    line = line.replace(ch, "@")
+                print(" ".join(reversed(line.split())))
+
+# even_lines()
+
+def line_numbers():
+    from costants import path_dir
+    from string import punctuation
+    import os
+    path_read = os.path.join(path_dir, "files", "text_even.txt")
+    path_out = os.path.join(path_dir, "files", "output_even.txt")
+    with open(path_read, 'r') as file_in, open(path_out, 'w') as file_out:
+        for index, line in enumerate(file_in):
+            punct = 0
+            letters = 0
+            for ch in line:
+                if ch in punctuation:
+                    punct += 1
+                elif ch.isalpha():
+                    letters += 1
+
+            file_out.write(f'Line {index+1}: {line.strip()} ({letters})({punct})\n')
+
+from costants import path_dir
+path_task = os.path.join(path_dir, "files")
+
+def create_file(full_file_name: str):
+    with open(full_file_name, 'w') as file_to_create: close()
+
+def add_file(full_file_name: str, content: str):
+    with open(full_file_name, 'a') as file_to_append:
+        file_to_append.write(content + '\n')
+
+def replace_file(full_file_name: str, *args):
+    old_string = args[0]
+    new_string = args[1]
+    try:
+        with open(full_file_name, 'r+') as file:
+            line = file.read()
+            file.seek(0)
+            file.truncate(0)
+            line = line.replace(old_string, new_string)
+            file.write(line)
+    except FileNotFoundError:
+        print("An error occurred")
+
+
+def delete_file(full_file_name: str):
+    try:
+        os.remove(full_file_name)
+    except FileNotFoundError:
+        print("An error occurred")
+
+def file_manipulator():
+
+    command_mapper = {
+        "Create": create_file,
+        "Replace": replace_file,
+        "Delete": delete_file,
+        "Add": add_file
+    }
+    while True:
+        command_line = input()
+        if command_line == "End":
+            break
+        command, file_name, *args = command_line.split("-")
+        path_to_create = os.path.join(path_task, file_name)
+        command_mapper[command](path_to_create, *args)
+
+file_manipulator()
