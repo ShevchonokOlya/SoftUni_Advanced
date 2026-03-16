@@ -1,7 +1,5 @@
-import re
-from fileinput import close
 
-from costants import path_dir
+from fileinput import close
 import os
 
 def create_file_text():
@@ -124,21 +122,21 @@ def line_numbers():
     path_out = os.path.join(path_dir, "files", "output_even.txt")
     with open(path_read, 'r') as file_in, open(path_out, 'w') as file_out:
         for index, line in enumerate(file_in):
-            punct = 0
+            punctuation_count = 0
             letters = 0
             for ch in line:
                 if ch in punctuation:
-                    punct += 1
+                    punctuation_count += 1
                 elif ch.isalpha():
                     letters += 1
 
-            file_out.write(f'Line {index+1}: {line.strip()} ({letters})({punct})\n')
+            file_out.write(f'Line {index+1}: {line.strip()} ({letters})({punctuation_count})\n')
 
 from costants import path_dir
 path_task = os.path.join(path_dir, "files")
 
 def create_file(full_file_name: str):
-    with open(full_file_name, 'w') as file_to_create: close()
+    with open(full_file_name, 'w'): close()
 
 def add_file(full_file_name: str, content: str):
     with open(full_file_name, 'a') as file_to_append:
@@ -180,4 +178,86 @@ def file_manipulator():
         path_to_create = os.path.join(path_task, file_name)
         command_mapper[command](path_to_create, *args)
 
-file_manipulator()
+# file_manipulator()
+
+def directory_traversal():
+    import os
+    files = {}
+    directory = "../"
+    #directory = '/Volumes/Extreme SSD/Olya/Food/[NAN] Я Нутрициолог 2.0 (Татьяна Забалуева, Елена Малиновская) 2'
+    path_dir_task = os.path.join(directory)
+    for element in os.listdir(path_dir_task):
+        f = os.path.join(path_dir_task, element)
+
+        if os.path.isfile(f):
+            extension = element.split(".")[-1]
+            if extension not in files:
+                files[extension] = []
+            files[extension].append(f)
+
+        else:
+            for folder_element in os.listdir(f):
+                file_name = os.path.join(f, folder_element)
+
+                if os.path.isfile(file_name):
+                    extension = folder_element.split(".")[-1]
+                    if extension not in files:
+                        files[extension] = []
+                    files[extension].append(folder_element)
+
+    with open(os.path.join(directory, "report.txt"), 'w') as output_file:
+        for extension, file_names in sorted(files.items()):
+            output_file.write(f'{extension}\n')
+            for file_name in sorted(file_names):
+                output_file.write(f'---{file_name}\n')
+
+
+def directory_traversal_recursive():
+    import os
+    import shutil
+
+    files = {".pdf": []}
+    directory = '/Volumes/Extreme SSD/Olya/Food/[NAN] Я Нутрициолог 2.0 (Забалуева,Малиновская)'
+    target_folder = os.path.join(directory, "pdf_files")
+    os.makedirs(target_folder, exist_ok=True)
+
+
+    def get_files(folder, level = 1):
+        if level == -1:
+            return
+
+        for element in os.listdir(folder):
+            if element.startswith('.'):
+                continue
+
+            f = os.path.join(folder, element)
+
+            if os.path.isfile(f):
+                extension = os.path.splitext(element)[1]
+                if extension == ".pdf":
+                    files[extension].append(f)
+            else:
+                get_files(f, level - 1)
+
+    get_files(directory, -2)
+
+    print(f"Found PDF-files: {len(files['.pdf'])}")
+    print("Started coping...")
+
+    for original_path in files[".pdf"]:
+        file_name = os.path.basename(original_path)
+        destination_path = os.path.join(target_folder, file_name)
+
+        if os.path.exists(destination_path):
+            base_name, ext = os.path.splitext(file_name)
+            counter = 1
+
+            while os.path.exists(destination_path):
+                new_name = f"{base_name}_{counter}{ext}"
+                destination_path = os.path.join(target_folder, new_name)
+                counter += 1
+
+        shutil.copy(original_path, destination_path)
+    print("Done.")
+
+
