@@ -206,10 +206,10 @@ def boarding_passengers(capacity_of_the_ship: int, *passengers):
     total_guests = sum(p[0] for p in passengers)
     for number_of_passenger, benefit_program in passengers:
         if current_capacity_of_the_ship >= number_of_passenger and current_capacity_of_the_ship > 0:
-            total_number_of_guests[benefit_program] = total_number_of_guests.get(benefit_program , 0) + number_of_passenger
+            total_number_of_guests[benefit_program] = total_number_of_guests.get(benefit_program,
+                                                                                 0) + number_of_passenger
             current_capacity_of_the_ship -= number_of_passenger
             boarded += number_of_passenger
-
 
     total_number_of_guests = sorted(total_number_of_guests.items(), key=lambda x: (-x[1], x[0]))
     string_result = f"Boarding details by benefit plan:\n"
@@ -224,7 +224,6 @@ def boarding_passengers(capacity_of_the_ship: int, *passengers):
     else:
         string_result += f"Boarding unsuccessful. Cruise ship at full capacity."
 
-
     return string_result
 
 
@@ -235,3 +234,330 @@ def boarding_passengers(capacity_of_the_ship: int, *passengers):
 # print("\n")
 # print(boarding_passengers(120, (30, 'Gold'), (20, 'Platinum'), (30, 'Diamond'), (10, 'First Cruiser'), (31, 'Platinum'),
 #                           (20, 'Diamond')))
+
+def bees():
+    field = []
+
+    bee_row, bee_col = float("-inf"), float("-inf")
+    initial_energy = 15
+    size = int(input())
+    collected_nectar = 0
+    restoration = False
+    reached_hive = False
+
+    for row in range(size):
+        line_of_field = list(input())
+        field.append(line_of_field)
+
+        for position in line_of_field:
+            if position == 'B':
+                bee_row = row
+                bee_col = line_of_field.index(position)
+
+    command_map = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+
+    }
+
+    while True:
+        initial_energy -= 1
+
+        command = input()
+        new_row, new_col = command_map[command](bee_row, bee_col)
+        if not (0 <= new_col < size and 0 <= new_row < size):
+            new_row, new_col = new_row % size, new_col % size
+        field[bee_row][bee_col] = "-"
+        bee_row, bee_col = new_row, new_col
+
+        if field[new_row][new_col].isdigit():
+            collected_nectar += int(field[new_row][new_col])
+
+        elif field[new_row][new_col] == 'H':
+            reached_hive = True
+            break
+
+        if initial_energy <= 0 and collected_nectar < 30:
+            break
+
+        elif initial_energy <= 0 and collected_nectar >= 30 and not restoration:
+            initial_energy += collected_nectar - 30
+            collected_nectar = 30
+            restoration = True
+
+            if initial_energy <= 0:
+                break
+
+
+        elif initial_energy <= 0 and restoration:
+            break
+
+    field[bee_row][bee_col] = "B"
+
+    if reached_hive and collected_nectar >= 30:
+        print(f"Great job, Bee! The hive is full. Energy left: {initial_energy}")
+    elif reached_hive and collected_nectar < 30:
+        print(f"Bee did not manage to collect enough nectar.")
+    elif not reached_hive and initial_energy <= 0:
+        print("This is the end! Bee ran out of energy.")
+
+    for line in field:
+        print(*line, sep="")
+
+
+def cookbook(*dishes) -> str:
+    cook_book = {}
+
+    for dish in dishes:
+        recipe_name, cuisine_type, ingredients = dish
+
+        if cuisine_type not in cook_book.keys():
+            cook_book[cuisine_type] = {}
+        cook_book[cuisine_type][recipe_name] = ingredients
+
+    cook_book = dict(sorted(cook_book.items(), key=lambda x: (-len(x[1]), x[0])))
+
+    result_string = ""
+    for cuisine_type, recipe_of_dish in cook_book.items():
+        result_string += f"{cuisine_type} cuisine contains {len(recipe_of_dish)} recipes:\n"
+        for recipe_name, ingredients in sorted(recipe_of_dish.items()):
+            result_string += f"  * {recipe_name} -> Ingredients: {', '.join(ingredients)}\n"
+    return result_string.strip()
+
+
+# print(cookbook(
+#     ("Spaghetti Bolognese", "Italian", ["spaghetti", "tomato sauce", "ground beef"]),
+#     ("Margherita Pizza", "Italian", ["pizza dough", "tomato sauce", "mozzarella"]),
+#     ("Tiramisu", "Italian", ["ladyfingers", "mascarpone", "coffee"]),
+#     ("Croissant", "French", ["flour", "butter", "yeast"]),
+#     ("Ratatouille", "French", ["eggplant", "zucchini", "tomatoes"])
+# ))
+# print("\n")
+#
+# print(cookbook(
+#     ("Pad Thai", "Thai", ["rice noodles", "shrimp", "peanuts", "bean sprouts", "tamarind sauce"])
+# ))
+# print("\n")
+# print(cookbook(
+#     ("Spaghetti Bolognese", "Italian", ["spaghetti", "tomato sauce", "ground beef"]),
+#     ("Margherita Pizza", "Italian", ["pizza dough", "tomato sauce", "mozzarella"]),
+#     ("Tiramisu", "Italian", ["ladyfingers", "mascarpone", "coffee"]),
+#     ("Croissant", "French", ["flour", "butter", "yeast"]),
+#     ("Ratatouille", "French", ["eggplant", "zucchini", "tomatoes"]),
+#     ("Sushi Rolls", "Japanese", ["rice", "nori", "fish", "vegetables"]),
+#     ("Miso Soup", "Japanese", ["tofu", "seaweed", "green onions"]),
+#     ("Guacamole", "Mexican", ["avocado", "tomato", "onion", "lime"])
+# ))
+def chicken_snack():
+    from collections import deque
+    money = list(map(int, input().split()))
+    prices = deque(map(int, input().split()))
+    henry_eaten = 0
+
+    while money and prices:
+
+        current_money = money.pop()
+        current_price = prices.popleft()
+        if current_money == current_price:
+            henry_eaten += 1
+
+        elif current_money > current_price:
+            if money:
+                money[-1] += current_money - current_price
+            henry_eaten += 1
+
+    if henry_eaten >= 4:
+        print(f"Gluttony of the day! Henry ate {henry_eaten} foods.")
+    elif henry_eaten > 0:
+        extra_s = 's' if henry_eaten > 1 else ''
+        print(f"Henry ate: {henry_eaten} food{extra_s}.")
+    else:
+        print("Henry remained hungry. He will try next weekend again.")
+
+
+def clear_skies():
+    skies = []
+
+    jet_row, jet_col = float("-inf"), float("-inf")
+
+    initial_armor = 300
+    size = int(input())
+
+    for row in range(size):
+        line_of_sky = list(input())
+        skies.append(line_of_sky)
+
+        for position in line_of_sky:
+            if position == 'J':
+                jet_row = row
+                jet_col = line_of_sky.index(position)
+
+    command_map = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+
+    }
+    amount_of_enemy = 4
+    skies[jet_row][jet_col] = "-"
+
+    while True:
+        if initial_armor <= 0:
+            break
+        command = input().strip()
+        new_row, new_col = command_map[command](jet_row, jet_col)
+        if 0 <= new_row < size and 0 <= new_col < size:
+            if skies[new_row][new_col] == "E":
+                initial_armor -= 100
+                skies[new_row][new_col] = "-"
+                amount_of_enemy -= 1
+            elif skies[new_row][new_col] == "R":
+                initial_armor = 300
+                skies[new_row][new_col] = "-"
+
+            jet_row, jet_col = new_row, new_col
+
+        if amount_of_enemy == 0:
+            break
+        if initial_armor <= 0:
+            break
+
+    if amount_of_enemy == 0:
+        print("Mission accomplished, you neutralized the aerial threat!")
+    if initial_armor <= 0:
+        print(f"Mission failed, your jet fighter was shot down! Last coordinates [{jet_row}, {jet_col}]!")
+
+    skies[jet_row][jet_col] = "J"
+
+    for line in skies:
+        print(*line, sep="")
+
+
+def off_road_challenge():
+    from collections import deque
+    initial_fuel = list(map(int, input().split()))
+    consumption_index = deque(map(int, input().split()))
+    quantities = deque(map(int, input().split()))
+    reached = 0
+    n = 0
+
+    while initial_fuel:
+        current_fuel = initial_fuel[-1]
+        current_index = consumption_index[0]
+        current_quantity = quantities[0]
+        n += 1
+        if (current_fuel - current_index) >= current_quantity:
+            print(f"John has reached: Altitude {n}")
+            initial_fuel.pop()
+            consumption_index.popleft()
+            quantities.popleft()
+            reached += 1
+        else:
+            print(f"John did not reach: Altitude {n}")
+            break
+
+    if not quantities:
+        print(f"John has reached all the altitudes and managed to reach the top!")
+    else:
+        print(f"John failed to reach the top.")
+        if reached > 0:
+            print(f"Reached altitudes: {', '.join(['Altitude ' + str(n) for n in range(1, reached + 1)])}")
+    if reached == 0:
+        print(f"John didn't reach any altitude.")
+
+
+def team_lineup(*team_players) -> str:
+    players = {}
+    for player_name, country in team_players:
+        players[country] = players.get(country, []) + [player_name]
+
+    players = dict(sorted(players.items(), key=lambda x: (-len(x[1]), x[0])))
+
+    result = ''
+    for country_name, players_names in players.items():
+        result += f"{country_name}:\n"
+        for players_name in players_names:
+            result += f"  -{players_name}\n"
+    return result
+
+
+#
+#
+# print(team_lineup(("Harry Kane", "England"), ("Manuel", "Germany"), ("Sterling", "England"),
+#                   ("Toni Kroos", "Germany"), ("Cristiano Ronaldo", "Portugal"), ("Thomas Muller", "Germany")))
+# print("\n")
+# print(team_lineup(("Lionel Messi", "Argentina"), ("Kylian", "Brazil"), ("Cristiano Ronaldo", "Portugal"),
+#                   ("Harry Kane", "England"), ("Kylian", "France"), ("Sterling", "England")))
+# print("\n")
+# print(team_lineup(("Harry Kane", "England"), ("Manuel", "Germany"), ("Sterling", "England"),
+#                   ("Toni Kroos", "Germany"), ("Cristiano Ronaldo", "Portugal"), ("Thomas Muller", "Germany"),
+#                   ("Bruno", "Portugal"), ("Bernardo Silva", "Portugal"), ("Harry", "England")))
+
+
+def command_mapping(command: str, row_number: int, col_number: int) -> (int, int):
+    command_map = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    return command_map[command](int(row_number), int(col_number))
+
+
+def fishing_competition():
+    see_size = int(input())
+    sea = []
+    fisher_row, fisher_col = float("inf"), float("inf")
+    for row in range(see_size):
+        line = list(input())
+        sea.append(line)
+        if "S" in line:
+            fisher_row, fisher_col = row, line.index("S")
+
+    total_catch = 0
+    got_in_whirlpool = False
+
+    while True:
+        command = input().strip()
+        if command == "collect the nets":
+            break
+
+        new_row, new_col = command_mapping(command, fisher_row, fisher_col)
+        if not (0 <= new_row < see_size and 0 <= new_col < see_size):
+            new_row, new_col = new_row % see_size, new_col % see_size
+
+        sea[fisher_row][fisher_col] = "-"
+        fisher_row, fisher_col = new_row, new_col
+
+
+        if sea[new_row][new_col] == "W":
+            got_in_whirlpool = True
+            break
+        elif sea[new_row][new_col].isdigit():
+            total_catch += int(sea[new_row][new_col])
+            sea[new_row][new_col] = "-"
+
+    sea[fisher_row][fisher_col] = "S"
+
+    if got_in_whirlpool:
+        print(
+            f"You fell into a whirlpool! The ship sank and you lost the fish you caught. Last coordinates of the ship: [{fisher_row},{fisher_col}]")
+        return
+
+    if total_catch >= 20:
+        print("Success! You managed to reach the quota!")
+    else:
+        print(
+            f"You didn't catch enough fish and didn't reach the quota! You need {20 - total_catch} tons of fish more.")
+
+    if total_catch > 0:
+        print(f"Amount of fish caught: {total_catch} tons.")
+
+    for line in sea:
+        print(*line, sep="")
+
+
