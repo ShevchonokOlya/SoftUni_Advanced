@@ -533,7 +533,6 @@ def fishing_competition():
         sea[fisher_row][fisher_col] = "-"
         fisher_row, fisher_col = new_row, new_col
 
-
         if sea[new_row][new_col] == "W":
             got_in_whirlpool = True
             break
@@ -560,4 +559,345 @@ def fishing_competition():
     for line in sea:
         print(*line, sep="")
 
+
+def gather_credits(number_of_credits: int, *args):
+    courses = set()
+    result = ""
+    total_credits = 0
+
+    for course_name, course_credits in args:
+        if total_credits >= number_of_credits:
+            break
+        if course_name not in courses:
+            courses.add(course_name)
+            total_credits += course_credits
+
+    if total_credits >= number_of_credits:
+        result += f"Enrollment finished! Maximum credits: {total_credits}.\n"
+        result += f"Courses: {', '.join(sorted(courses))}\n"
+    else:
+        result += f"You need to enroll in more courses! You have to gather {number_of_credits - total_credits} credits more."
+    return result.strip()
+
+
+#
+# print(gather_credits(
+#     80,
+#     ("Basics", 27),
+# ))
+#
+# print(gather_credits(
+#     80,
+#     ("Advanced", 30),
+#     ("Basics", 27),
+#     ("Fundamentals", 27),
+# ))
+#
+# print(gather_credits(
+#     60,
+#     ("Basics", 27),
+#     ("Fundamentals", 27),
+#     ("Advanced", 30),
+#     ("Web", 30)
+# ))
+
+def temple_of_doom():
+    from collections import deque
+    tools = deque([int(number) for number in input().split()])
+    substances = list(map(int, input().split()))
+    challenges = list(map(int, input().split()))
+
+    while tools and substances:
+        current_tool = tools.popleft()
+        current_substance = substances.pop()
+        current_chance = current_tool * current_substance
+        if current_chance in challenges:
+            challenges.remove(current_chance)
+        else:
+            current_tool += 1
+            tools.append(current_tool)
+            current_substance -= 1
+            if current_substance != 0:
+                substances.append(current_substance)
+
+    if challenges and (not tools or not substances):
+        print("Harry is lost in the temple. Oblivion awaits him.")
+    else:
+        print("Harry found an ostracon, which is dated to the 6th century BCE.")
+    if tools:
+        print(f"Tools: {', '.join(map(str, tools))}")
+    if substances:
+        print(f"Substances: {', '.join(map(str, substances))}")
+    if challenges:
+        print(f"Challenges: {', '.join(map(str, challenges))}")
+
+
+def movement_map(command: str, row_number: int, col_number: int) -> (int, int):
+    command_map = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    return command_map[command](int(row_number), int(col_number))
+
+
+def mouse_in_the_kitchen():
+    kitchen_row_size, kitchen_col_size = map(int, input().split(","))
+
+    kitchen = []
+    cheese = []
+    mouse_row, mouse_col = float("inf"), float("inf")
+
+    for row in range(kitchen_row_size):
+        line = list(input())
+        kitchen.append(line)
+        if "M" in line:
+            mouse_row, mouse_col = row, line.index("M")
+        if "C" in line:
+            for index, el in enumerate(line):
+                if el == "C":
+                    cheese.append([row, index])
+
+    while True:
+        command = input().strip()
+        if command == "danger":
+            if cheese:
+                print("Mouse will come back later!")
+            break
+        new_row, new_col = movement_map(command, mouse_row, mouse_col)
+        if 0 <= new_row < kitchen_row_size and 0 <= new_col < kitchen_col_size:
+            if kitchen[new_row][new_col] == "T":
+                print("Mouse is trapped!")
+                kitchen[mouse_row][mouse_col] = "*"
+                kitchen[new_row][new_col] = "M"
+                mouse_row, mouse_col = new_row, new_col
+                break
+
+            elif kitchen[new_row][new_col] == "C":
+                kitchen[mouse_row][mouse_col] = "*"
+                kitchen[new_row][new_col] = "M"
+                mouse_row, mouse_col = new_row, new_col
+                cheese.remove([new_row, new_col])
+                if not cheese:
+                    print("Happy mouse! All the cheese is eaten, good night!")
+                    break
+
+            elif kitchen[new_row][new_col] == "@":
+                pass
+
+            elif kitchen[new_row][new_col] == "*":
+                kitchen[mouse_row][mouse_col] = "*"
+                kitchen[new_row][new_col] = "M"
+                mouse_row, mouse_col = new_row, new_col
+
+        else:
+            print("No more cheese for tonight!")
+            break
+
+    for line in kitchen:
+        print(*line, sep="")
+
+
+def click_bait():
+    from collections import deque
+    final_feed = []
+
+    suggested_links = deque(map(int, input().split()))
+    featured_articles = list(map(int, input().split()))
+    target_engagement_value = int(input().strip())
+    while suggested_links and featured_articles:
+        current_link = suggested_links.popleft()
+        current_article = featured_articles.pop()
+        max_val, max_name = max((current_link, "link"), (current_article, "feature"))
+        min_val, min_name = min((current_link, "link"), (current_article, "feature"))
+        remainder = max_val % min_val
+
+        if max_val == min_val:
+            final_feed.append(0)
+        elif max_name == "feature":
+            final_feed.append(remainder)
+            if remainder != 0:
+                featured_articles.append(remainder * 2)
+        else:
+            final_feed.append((-1) * remainder)
+            if remainder != 0:
+                suggested_links.append(remainder * 2)
+
+
+    print(f"Final Feed: {', '.join(map(str, final_feed))}")
+
+    total_final_feed = sum(final_feed)
+
+    if  total_final_feed >= target_engagement_value :
+        print(f"Goal achieved! Engagement Value: {total_final_feed}")
+    else:
+        shortfall = target_engagement_value - total_final_feed
+        print(f"Goal not achieved! Short by: {shortfall}")
+
+def plant_garden(garden_space: float, *types_of_plants, **planting_requests):
+
+    plants = {}
+    planted_plants = {}
+    result = ''
+    for type_of_plant, space_require in types_of_plants:
+        plants[type_of_plant] = plants.get(type_of_plant, space_require)
+
+    planting_requests = dict(sorted((k, v) for k, v in planting_requests.items() if k in plants))
+
+    for plant_type , quantity in planting_requests.items():
+
+        if plant_type in plants.keys():
+            possible_amount =  int(garden_space / plants[plant_type])
+            can_be_planted = min(possible_amount, quantity)
+            if can_be_planted > 0:
+                garden_space  -= can_be_planted * plants[plant_type]
+                planting_requests[plant_type] -= can_be_planted
+                planted_plants[plant_type] = planted_plants.get(plant_type, 0) + can_be_planted
+
+        if garden_space <= 0:
+            break
+
+    if sum(planting_requests.values()) == 0:
+        result += f"All plants were planted! Available garden space: {garden_space:.1f} sq meters.\n"
+    else:
+        result += f"Not enough space to plant all requested plants!\n"
+
+    result += f"Planted plants:\n"
+
+    for k, v in planted_plants.items():
+        result += f"{k}: {int(v)}\n"
+
+    return result.strip()
+
+#
+# print(plant_garden(50.0, ("rose", 2.5), ("tulip", 1.2), ("sunflower", 3.0), rose=10, tulip=20))
+# print(plant_garden(20.0, ("rose", 2.0), ("tulip", 1.2), ("sunflower", 3.0), rose=10, tulip=20, sunflower=5))
+# print(plant_garden(2.0, ("rose", 2.5), ("tulip", 1.2), ("daisy", 0.2), rose=4, tulip=15, sunflower=3, daisy=4))
+# print(plant_garden(50.0, ("tulip", 1.2), ("sunflower", 3.0), rose=10, tulip=20, daisy=1))
+
+
+def movement_space_map(command: str, row_number: int, col_number: int) -> (int, int):
+    command_map = {
+        "up": lambda x, y: (x - 1, y),
+        "down": lambda x, y: (x + 1, y),
+        "left": lambda x, y: (x, y - 1),
+        "right": lambda x, y: (x, y + 1),
+    }
+
+    return command_map[command](int(row_number), int(col_number))
+
+def space_mission():
+
+    space_size = int(input().strip())
+    space = []
+    current_resources = 100
+    planet_row, planet_col = float("inf"), float("inf")
+    spaceship_row, spaceship_col = float("inf"), float("inf")
+    is_lost = False
+
+    for row in range(space_size):
+        line = list(input().split())
+        space.append(line)
+        if "S" in line:
+            spaceship_row, spaceship_col = row, line.index("S")
+
+        if "P" in line:
+            planet_row, planet_col = row, line.index("P")
+
+
+    space[spaceship_row][spaceship_col] = '.'
+
+    while current_resources > 4:
+        command = input().strip()
+        new_row, new_col = movement_space_map(command, spaceship_row, spaceship_col)
+        current_resources -= 5
+
+        if 0 <= new_row < space_size and 0 <= new_col < space_size:
+            if space[new_row][new_col] == "R":
+                current_resources = min(100, current_resources + 10)
+                spaceship_row, spaceship_col = new_row, new_col
+
+
+            elif space[new_row][new_col] == "M":
+                space[new_row][new_col] = '.'
+                spaceship_row, spaceship_col = new_row, new_col
+
+                current_resources -= 5
+
+            elif space[new_row][new_col] == "P":
+                spaceship_row, spaceship_col = new_row, new_col
+                break
+
+            else:
+                spaceship_row, spaceship_col = new_row, new_col
+
+        else:
+            is_lost = True
+            break
+
+    if not (spaceship_row == planet_row and spaceship_col == planet_col):
+        space[spaceship_row][spaceship_col] = 'S'
+
+    if planet_row == spaceship_row and planet_col == spaceship_col and current_resources >= 0:
+        print(f"Mission accomplished! The spaceship reached Planet B with {current_resources} resources left.")
+    elif is_lost:
+        print(f"Mission failed! The spaceship was lost in space.")
+    else:
+        print("Mission failed! The spaceship was stranded in space.")
+
+    for line in space:
+        print(" ".join(line))
+
+def accommodate(*groups, **rooms):
+    from collections import deque
+    groups_of_guests = deque(groups)
+    unaccommodated = []
+
+
+    hotel = {}
+    while groups_of_guests:
+        current_guests = groups_of_guests.popleft()
+        booking_successfully = False
+
+        room_number_booked = float("-inf")
+        for room, capacity in sorted(rooms.items(), key=lambda x: (x[1], int(x[0].split("_")[1]))):
+            if capacity >= current_guests:
+                number = int(room.split("_")[1])
+
+                hotel[number] = current_guests
+                room_number_booked = room
+                booking_successfully = True
+                break #breaking for
+
+        if booking_successfully:
+            del rooms[room_number_booked]
+        else:
+            unaccommodated.append(current_guests)
+
+    rooms = dict([(item, value) for item, value in rooms.items() if value != 0])
+
+    result = ''
+
+    if hotel:
+        result = f"A total of {len(hotel.keys())} accommodations were completed!\n"
+        for hotel_room, guest_in_room in sorted(hotel.items(), key= lambda x: x[0]):
+           result += f"<Room {hotel_room} accommodates {guest_in_room} guests>\n"
+    else:
+        result +="No accommodations were completed!\n"
+
+    if unaccommodated:
+        result += f"Guests with no accommodation: {sum(unaccommodated)}\n"
+    if rooms:
+        result += f"Empty rooms: {len(rooms.keys())}\n"
+
+    return result.strip()
+
+
+print(accommodate(5, 4, 2, room_305=6, room_410=5, room_204=2))
+print("\n")
+print(accommodate(10, 9, 8, room_307=6, room_802=5))
+print("\n")
+print(accommodate(1, 2, 4, 8, room_102=3, room_101=1, room_103=2))
 
